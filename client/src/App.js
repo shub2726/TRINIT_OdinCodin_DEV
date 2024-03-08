@@ -6,7 +6,6 @@ import { CircularProgress, CircularProgressLabel } from '@chakra-ui/react'
 
 import Login from './components/Login';
 import Register from './components/Register';
-import Dashboard from './components/dashboard';
 import { BrowserRouter as Router, Route, Routes, Navigate } from 'react-router-dom';
 import Cookies from "universal-cookie";
 
@@ -32,11 +31,6 @@ function App() {
   }
 
   return (
-<<<<<<< HEAD
-      <div>
-        <Dashboard />
-      </div>
-=======
     <Router>
       <Routes>
         <Route path="*" element = {<h1>404</h1>}/>
@@ -47,7 +41,6 @@ function App() {
         <Route path="/dashboard" element={<ProtectedRoute><Dashboard/></ProtectedRoute>} />
       </Routes>
     </Router>
->>>>>>> 249664337b2357085c9d7e2ce0d21c80b3cddd1e
   );
 }
 
