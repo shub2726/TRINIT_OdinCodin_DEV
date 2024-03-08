@@ -35,10 +35,9 @@ function App() {
 
       try {
         const response = await axios.request(config);
-        console.log("hi")
-        console.log(JSON.stringify(response.data));
         response.data.ParsedResults.forEach(element => {
           setConcatData(concatdata + element.ParsedText);
+          console.log(concatdata)
         })
       } catch (error) {
         console.log(error);
