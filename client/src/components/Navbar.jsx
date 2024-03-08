@@ -18,7 +18,7 @@ export default function Navbar() {
     <Flex as="nav" p="15px" alignItems='center' gap='10px' bgColor='gray.200'>
         <Heading as="h1">WEBSITE</Heading>
         <Spacer />
-        <Text fontSize='2xl'>Username</Text>
+        <Text fontSize='2xl'>{token.user.username}</Text>
         <Menu>
             <MenuButton as={Avatar} size="md" bg="teal.500" _hover={{
     cursor: "pointer"

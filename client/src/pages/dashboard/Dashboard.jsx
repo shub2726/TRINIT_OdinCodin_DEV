@@ -1,9 +1,12 @@
 import { chakra, Box, Wrap, WrapItem } from "@chakra-ui/react";
 import { Card, CardBody, Stack, Heading, Text, Divider, CardFooter, Button, ButtonGroup } from "@chakra-ui/react";
 import Navbar from "../../components/Navbar";
+import Cookies from "universal-cookie";
 
 export default function Dashboard() {
+    const cookies = new Cookies();
     
+    const token = cookies.get("TOKEN");
   return (
     <>
       <Navbar />
@@ -16,7 +19,7 @@ export default function Dashboard() {
                 <Stack mt="6" spacing="3">
                   <Heading size="md">JEE Mock Test - {index}</Heading>
                   <Text color="blue.600" fontSize="2xl">
-                    Username
+                    {token.user.username}
                   </Text>
                 </Stack>
               </CardBody>
