@@ -1,8 +1,13 @@
 const express = require("express")
 const cors = require("cors")
+const mongoose = require("mongoose")
+const dotenv = require("dotenv")
+const path = require("path")
 const router = express.Router();
 
 const app = express();
+
+dotenv.config();
 
 app.use(
     cors({
@@ -12,6 +17,7 @@ app.use(
     }
 ))
 
+mongoose.connect(process.env.mongo_link); 
 app.use(express.json());
 
 app.get("/", (req, res) => {
