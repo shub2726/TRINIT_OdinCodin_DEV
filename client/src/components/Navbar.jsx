@@ -6,7 +6,6 @@ import Cookies from "universal-cookie";
 export default function Navbar() {
     const cookies = new Cookies();
     
-
     const token = cookies.get("TOKEN")
 
     const handleLogout = () => {
@@ -16,7 +15,7 @@ export default function Navbar() {
 
   return (
     <Flex as="nav" p="15px" alignItems='center' gap='10px' bgColor='gray.200'>
-        <Heading as="h1">WEBSITE</Heading>
+        <Heading as="h1">TestSeva</Heading>
         <Spacer />
         <Text fontSize='2xl'>{token.user.username}</Text>
         <Menu>
