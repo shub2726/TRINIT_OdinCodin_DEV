@@ -38,8 +38,12 @@ function App() {
         console.log("hi")
         console.log(JSON.stringify(response.data));
         response.data.ParsedResults.forEach(element => {
-          setConcatData(concatdata + element.ParsedText);
+          const type = element.ParsedText
+          console.log(type);
+          setConcatData((prev) => prev + type)
+          //setConcatData(concatdata + type); 
         })
+        console.log(concatdata)
       } catch (error) {
         console.log(error);
       }
