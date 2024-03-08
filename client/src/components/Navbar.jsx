@@ -1,6 +1,19 @@
-import { Text , Menu , MenuButton , MenuList, MenuItem, Avatar, Flex, Heading, Spacer } from '@chakra-ui/react'
+import { Text , Menu , MenuButton , MenuList, MenuItem, Avatar, Flex, Heading, Spacer, Button } from '@chakra-ui/react'
+import React, { useState } from "react";
+import axios from "axios";
+import Cookies from "universal-cookie";
 
 export default function Navbar() {
+    const cookies = new Cookies();
+    
+
+    const token = cookies.get("TOKEN")
+
+    const handleLogout = () => {
+        cookies.remove("TOKEN", { path: "/" });
+        window.location.href = 'http://localhost:8000/logout';
+    }
+
   return (
     <Flex as="nav" p="15px" alignItems='center' gap='10px' bgColor='gray.200'>
         <Heading as="h1">WEBSITE</Heading>
@@ -15,7 +28,7 @@ export default function Navbar() {
                 <MenuItem >Your Menu Item 1</MenuItem>
                 <MenuItem >Your Menu Item 1</MenuItem>
                 <MenuItem >Your Menu Item 1</MenuItem>
-                <MenuItem  color='red'>Sign Out</MenuItem>
+                <MenuItem  color='red' onClick={handleLogout}>Sign Out</MenuItem>
                 {/* Add more menu items as needed */}
             </MenuList>
         </Menu>

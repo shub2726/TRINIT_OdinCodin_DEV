@@ -3,6 +3,7 @@ import { Card, CardBody, Stack, Heading, Text, Divider, CardFooter, Button, Butt
 import Navbar from "../../components/Navbar";
 
 export default function Dashboard() {
+    
   return (
     <>
       <Navbar />
