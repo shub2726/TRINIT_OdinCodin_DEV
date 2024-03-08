@@ -104,8 +104,11 @@ app.get('/auth/check-session', (req, res) => {
 });
 
 const authRoute = require("./routes/auth")
+const paperRoute = require("./routes/papers")
 
 app.use("/api/v1/auth", authRoute);
+app.use("/api/v1/papers", paperRoute);
+
 
 passportSetup();
 

@@ -15,10 +15,6 @@ const questionSchema = new mongoose.Schema({
         type: String,
         required: true,
     },
-    subject: {
-        type: String,
-        required: true
-    }
 });
 
 module.exports = mongoose.model("Question", questionSchema);

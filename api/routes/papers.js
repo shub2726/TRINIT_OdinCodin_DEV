@@ -1,24 +1,50 @@
 const router = require('express').Router();
-const Event = require('../models/Event');
-const Club = require('../models/Clubs');
-const User = require('../models/User');
-const Paper = require('..model/Paper');
-const Question = require('../models/Question')
-const CustomEvent = require("../models/CustomEvent")
+const Paper = require('../models/Paper');
+
 
 router.post("/create-paper",async (req, res) => {
     try{
+        const allQuestions = req.body.questions;
+
+        const questionFormat = allQuestions.map(question => {
+            const { question: questionText, options } = question;
+          
+            const optionsWithImage = options.map(option => ({
+              ...option,
+              image: null,
+            }));
+          
+            return {
+              ...question,
+              questionImage: null, 
+              options: optionsWithImage,
+              ansVal: null,
+            };
+        });
+
+        console.log(questionFormat)
+
+        const time = Number(req.body.timelimit);
+        const Private = true;
+
+        if (req.body.Private == 2) {
+            Private = false;
+        }
+
         const newPaper = new Paper({
             userId: req.body.userId,
             paperTitle: req.body.paperTitle,
-            timelimit: req.body.timelimit,
-            Private: req.body.Private,
+            TimeLimit: time,
+            Private: Private,
+            questions: questionFormat
         })
 
         const paper = await newPaper.save();
-        res.status(200).json(que);
+        console.log("Success")
+        res.status(200).json("A new paper has been created!");
     }
     catch(error){
+        console.log(error)
         res.status(500).json(error);
     }
 })
