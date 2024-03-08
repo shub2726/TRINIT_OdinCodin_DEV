@@ -1,7 +1,7 @@
 import React, { useEffect, useState } from "react";
 
-const QuestionParser = ({ text }) => {
-  const [questions, setQuestions] = useState([]);
+const QuestionParser = ({ text ,questions,setQuestions}) => {
+  // const [questions, setQuestions] = useState([]);
 
   useEffect(() => {
     const parsedQuestions = text.split(/\d+\./).filter(Boolean).map((q) => {
@@ -16,7 +16,7 @@ const QuestionParser = ({ text }) => {
 
   return (
     <div>
-      {questions.map((q, index) => (
+      {/* {questions.map((q, index) => (
         <div key={index}>
           <p>{q.question}</p>
           <ul>
@@ -25,7 +25,7 @@ const QuestionParser = ({ text }) => {
             ))}
           </ul>
         </div>
-      ))}
+      ))} */}
     </div>
   );
 };

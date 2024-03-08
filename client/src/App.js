@@ -5,9 +5,11 @@ import { CircularProgress, CircularProgressLabel } from '@chakra-ui/react'
 import QuestionParser from './components/QuestionParser';
 import { useEffect, useState } from 'react';
 import axios from "axios"
+import Cards from './components/Cards';
 const FormData = require('form-data');
 
 function App() {
+  const [questions,setQuestions] = useState([])
   const [concatdata, setConcatData] = useState("");
   useEffect(() => {
     const fetchData = async () => {
@@ -52,8 +54,9 @@ function App() {
 
   return (
     <div>
-      <QuestionParser text={concatdata} />
-      <CircularProgress isIndeterminate color='green.300' />
+      <QuestionParser text={concatdata} questions={questions} setQuestions={setQuestions}/>
+      
+      <Cards questions={questions}/>
     </div>
   );
 }
