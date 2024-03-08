@@ -5,6 +5,10 @@ const paperSchema = new mongoose.Schema({
         type: mongoose.Schema.Types.ObjectId, 
         ref: 'User',
     },
+    paperTitle:{
+        type: String,
+        required: true
+    },
     TimeLimit : {
         type: Number,
         required: true
