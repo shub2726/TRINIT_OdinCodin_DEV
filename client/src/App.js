@@ -35,8 +35,6 @@ function App() {
 
       try {
         const response = await axios.request(config);
-        console.log("hi")
-        console.log(JSON.stringify(response.data));
         response.data.ParsedResults.forEach(element => {
           const type = element.ParsedText
           console.log(type);
