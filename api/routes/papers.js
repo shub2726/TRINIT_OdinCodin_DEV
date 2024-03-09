@@ -1,5 +1,6 @@
 const router = require('express').Router();
 const Paper = require('../models/Paper');
+const Group = require('../models/Group')
 
 
 router.post("/create-paper", async (req, res) => {
@@ -29,8 +30,19 @@ router.post("/create-paper", async (req, res) => {
             Private = false;
         }
 
+        const NGM = new Group({
+            GroupName:req.body.paperTitle,
+            users:[req.body.userID]
+        })
+        const gr = await Ngrp.save();
+        // const usr = await User.findById(req.body.userID)
+        // const result = await usr.updateOne({$push:{memberOf:gr._id}})
+
+        
+
         const newPaper = new Paper({
             userId: req.body.userId,
+            GroupID:gr._id,
             paperTitle: req.body.paperTitle,
             TimeLimit: time,
             Private: Private,
