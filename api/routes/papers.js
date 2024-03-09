@@ -5,6 +5,7 @@ const Group = require('../models/Group')
 
 router.post("/create-paper", async (req, res) => {
     try {
+        console.log(req.body);
         const allQuestions = req.body.questions;
 
         const questionFormat = allQuestions.map(question => {
@@ -19,7 +20,6 @@ router.post("/create-paper", async (req, res) => {
                 ...question,
                 questionImage: null,
                 options: optionsWithImage,
-                ansVal: null,
             };
         });
 
@@ -32,7 +32,7 @@ router.post("/create-paper", async (req, res) => {
 
         const Ngrp = new Group({
             GroupName:req.body.paperTitle,
-            users:[req.body.userID]
+            users:[req.body.userId]
         })
         const gr = await Ngrp.save();
         // const usr = await User.findById(req.body.userID)

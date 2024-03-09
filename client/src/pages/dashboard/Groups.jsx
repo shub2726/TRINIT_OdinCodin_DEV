@@ -131,7 +131,7 @@ const Groups = () => {
             <Modal isOpen={isOpen} onClose={onClose}>
                 <ModalOverlay />
                 <ModalContent>
-                `   <ModalHeader>Modal Title</ModalHeader>
+                `   <ModalHeader>Create New Group</ModalHeader>
                     <ModalCloseButton />
                     <ModalBody>
                         <Input value={grpName} onChange={(e) => {setGrpName(e.target.value)}} placeholder='Group Name'></Input>

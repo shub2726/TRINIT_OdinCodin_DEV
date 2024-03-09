@@ -14,6 +14,18 @@ router.post("/get-groups", async (req,res) => {
     }
 })
 
+router.post("/check-members",async (req,res) => {
+    try{
+        const result = await Group.findById(req.body.GroupID);
+        if (result.users.length == 0) {res.send(false);return;}
+        console.log(req.body.GroupID,result,result.users.includes(req.body.userID))
+        res.send(result.users.includes(req.body.userID)).status(200)
+    } catch(error){
+        console.log(error);
+        res.status(500).json(error);
+    }
+})
+
 router.post("/new-group", async (req,res) =>{
     try{
         console.log(req.body);
