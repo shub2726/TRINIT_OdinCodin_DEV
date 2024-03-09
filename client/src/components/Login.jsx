@@ -3,13 +3,14 @@ import axios from "axios";
 import {
     FormControl,
     FormLabel,
+    Link,
+    Image
 } from '@chakra-ui/react'
 
 import { Flex, Box, Container } from '@chakra-ui/react'
-import { Input } from '@chakra-ui/react'
+import { Input, Text } from '@chakra-ui/react'
 import { Button } from '@chakra-ui/react'
 import { useToast, Heading } from '@chakra-ui/react'
-
 import Cookies from "universal-cookie";
 
 export default function Login() {
@@ -90,7 +91,7 @@ export default function Login() {
                     p="6"
                     boxShadow="lg"
                 >
-                    <Heading>TestSeva</Heading>
+                    <Image h="75px" src="/logo.png" alt="OdinCodin Mock Test Generator" />
                     <FormControl>
                         <Flex direction="column" align="center" justify="center" height="50vh">
                             <Box mb={4}>
@@ -121,6 +122,7 @@ export default function Login() {
                             >
                                 Login
                             </Button>
+                            <a href="/register">Don't have an account? Register</a>
                         </Flex>
                     </FormControl>
                 </Box>

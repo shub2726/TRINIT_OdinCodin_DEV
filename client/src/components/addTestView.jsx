@@ -279,9 +279,11 @@ const AddTestView = () => {
   return (
     <Flex direction="column" gap={10} p={5}>
       <Flex gap={10}>
+        <Link to="/app/create-tool">
         <Button colorScheme="blue" size="lg" width="100%">
           Create a test manually
         </Button>
+        </Link>
         <Button colorScheme="blue" size="lg" width="100%" onClick={onOpen}>
           Generate a test from a PDF
         </Button>

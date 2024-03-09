@@ -107,7 +107,7 @@ const ManualTests = () => {
 
                     <FormControl mb={4}>
                         <FormLabel>Answer Option:</FormLabel>
-                        <Input type="Number" placeholder="Enter 1,2,3 or 4" id={`answer${i}`}/>
+                        <Input type="text" placeholder="Enter a,b,c or d" id={`answer${i}`}/>
                     </FormControl>
                 </Flex>
             );
@@ -136,6 +136,20 @@ const ManualTests = () => {
                     isClosable: true,
                 });
 
+                setGenerating(false);
+                return;
+            }
+
+            if (answer !== "a" || answer !== "b" || answer !== "c" || answer !== "d") {
+                toast({
+                    title: 'Answer should be a,b,c or d',
+                    position: 'top-left',
+                    status: 'error',
+                    duration: 1000,
+                    isClosable: true,
+                });
+
+                setGenerating(true);
                 return;
             }
 

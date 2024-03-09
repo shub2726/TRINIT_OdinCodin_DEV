@@ -51,10 +51,8 @@ router.post("/create-paper", async (req, res) => {
         })
 
         const paper = await newPaper.save();
-        console.log("Success")
         res.status(200).json("A new paper has been created!");
     } catch (error) {
-        console.log(error)
         res.status(500).json(error);
     }
 })
@@ -139,7 +137,6 @@ router.get("/getQuestions/:queryString", async (req, res) => {
         return res.status(200).json(formattedPaper);
 
     } catch (error) {
-        console.error(error);
         return res.status(500).json({ error: 'Internal Server Error' });
     }
 });
@@ -161,7 +158,6 @@ router.put("/updateQuestions/:paperId", async (req, res) => {
 
         res.status(200).json(updatedPaper);
     } catch (error) {
-        console.log(error)
         res.status(500).json({ error: 'Internal Server Error' });
     }
 })
@@ -183,7 +179,6 @@ router.put("/updateOptionImages/:paperId", async (req, res) => {
         
         res.status(200).json("Success!");
     } catch (error) {
-        console.log(error);
         res.status(500).json({ error: 'Internal Server Error' });
     }
 });
