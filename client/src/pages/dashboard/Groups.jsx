@@ -16,6 +16,7 @@ import {
     ModalBody,
     ModalCloseButton,
   } from '@chakra-ui/react'
+import { Link } from 'react-router-dom'
 
 const Groups = () => {
     const cookies = new Cookies();
@@ -132,14 +133,16 @@ const Groups = () => {
 
             <Flex gap="10px">
                 <Input placeholder='Input Unique ID' value={grpID} onChange={(e) => {setID(e.target.value)}}/>
-                <Button onClick={joinGRP} p="15px">Join Group</Button>
+                <Button onClick={joinGRP} p="15px" w="200px">Join Group</Button>
             </Flex>
-            Groups
+            <Text  fontSize="6xl">Groups</Text>
             <Flex direction="column" gap="10px">
                 {groups.map((e, index) => (
-                    <Button key={index} p="4px">
-                        <Text>{e.GroupName}</Text>
-                    </Button>
+                    <Link to={`/groups/${e._id}`}>
+                        <Button key={index} p="10px" w="200px">
+                            <Text>{e.GroupName}</Text>
+                        </Button>
+                    </Link>
                 ))}
             </Flex>
         </Flex>
