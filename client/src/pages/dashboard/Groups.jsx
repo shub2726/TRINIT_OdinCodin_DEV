@@ -45,6 +45,7 @@ const Groups = () => {
 
             setGrpName("");
             setTimeout(onClose,1000)
+            fetchGRPs();
 
             
         } catch(error){
@@ -75,6 +76,7 @@ const Groups = () => {
               })
 
             setID("");
+            fetchGRPs();
             
             
             console.log(response);
