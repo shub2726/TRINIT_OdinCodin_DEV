@@ -35,7 +35,7 @@ router.post("/create-paper", async (req, res) => {
             GroupName:req.body.paperTitle,
             users:[req.body.userId]
         })
-        const gr = await NGM.save();
+        const gr = await Ngrp.save();
         // const usr = await User.findById(req.body.userID)
         // const result = await usr.updateOne({$push:{memberOf:gr._id}})
 
