@@ -14,7 +14,7 @@ import {
     Switch,
     Editable,
     EditablePreview,
-    EditableInput
+    EditableInput,
 } from '@chakra-ui/react';
 import { FormControl, FormLabel } from "@chakra-ui/react";
 import { useDisclosure } from '@chakra-ui/react'
@@ -26,6 +26,7 @@ import { useToast, Heading } from '@chakra-ui/react'
 import { IconButton } from '@chakra-ui/react'
 import { CheckIcon } from '@chakra-ui/icons'
 import { Link } from "react-router-dom";
+import { BeatLoader } from 'react-spinners';
 
 const AddTestView = () => {
     const { isOpen, onOpen, onClose } = useDisclosure()
@@ -45,6 +46,7 @@ const AddTestView = () => {
     const cookies = new Cookies();
     const token = cookies.get("TOKEN");
     const toast = useToast()
+    const [generating, setGenerating] = useState(false);
     // https://ncert.nic.in/pdf/publication/exemplarproblem/classIX/science/ieep117.pdf
 
 
@@ -88,15 +90,19 @@ const AddTestView = () => {
                 isClosable: true,
             })
 
+            setGenerating(false);
+
         } catch (error) {
             // Handle error
             toast({
-                title: error.response.data.message,
+                title: error.response.data.message + ".Please try again",
                 position: 'top-left',
                 status: 'error',
                 duration: 1000,
                 isClosable: true,
             })
+
+            setGenerating(false);
         }
     };
 
@@ -122,6 +128,8 @@ const AddTestView = () => {
                 duration: 1000,
                 isClosable: true,
             })
+
+            setGenerating(false);
         } catch (error) {
             toast({
                 title: "Some error!",
@@ -130,12 +138,15 @@ const AddTestView = () => {
                 duration: 1000,
                 isClosable: true,
             })
+
+            setGenerating(false);
         }
     };
 
 
     const fetchData = async () => {
         let data = new FormData();
+        setGenerating(true);
         data.append('url', link);
         data.append('language', 'eng');
         data.append('scale', 'true');
@@ -164,19 +175,21 @@ const AddTestView = () => {
                 console.log(type);
                 setConcatData((prev) => prev + type)
                 //setConcatData(concatdata + type);
-                if (questions.length == 0) {
-                    toast({
-                        title: "Some error has occurred",
-                        position: 'top-left',
-                        status: 'error',
-                        duration: 1000,
-                        isClosable: true,
-                    })
-                    return;
-                } else {
-                    generate();
-                }
             })
+
+            if (questions.length == 0) {
+                toast({
+                    title: "Some error has occurred",
+                    position: 'top-left',
+                    status: 'error',
+                    duration: 1000,
+                    isClosable: true,
+                })
+                setGenerating(false);
+                return;
+            } else {
+                generate();
+            }
         } catch (error) {
             console.log(error);
         }
@@ -302,7 +315,10 @@ const AddTestView = () => {
                     </ModalBody>
 
                     <ModalFooter>
-                        <Button colorScheme='blue' mr={3} onClick={fetchData}>
+                        <Button colorScheme='blue' mr={3} onClick={fetchData}
+                        isLoading = {generating}
+                        spinner={<BeatLoader size={8} color='white' />}
+                        >
                             Generate Test
                         </Button>
                         <Button onClick={onClose}>Cancel</Button>
