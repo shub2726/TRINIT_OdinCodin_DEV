@@ -107,6 +107,13 @@ const authRoute = require("./routes/auth")
 const userRoute = require("./routes/users")
 app.use("/api/v1/auth", authRoute);
 app.use("/api/v1/users", userRoute)
+const paperRoute = require("./routes/papers")
+const grpRoute = require("./routes/group")
+
+app.use("/api/v1/papers", paperRoute);
+app.use("/api/v1/groups",grpRoute)
+
+
 passportSetup();
 
 app.listen(process.env.PORT, () => {

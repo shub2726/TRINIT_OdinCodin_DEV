@@ -9,8 +9,6 @@ const CustomEvent = require("../models/CustomEvent")
 //create a question
 router.post("/create-question", async (req, res) => {
     try {
-        
-
         const newQuestion = new Question({
             questionText: req.body.questionText,
             questionImage: req.body.questionImage,

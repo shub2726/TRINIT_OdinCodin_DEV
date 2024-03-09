@@ -96,7 +96,6 @@ export default function Register() {
             })
 
             setLoading(false);
-            console.log(response.data.message);
         } catch (error) {
             setLoading(false);
             toast({

@@ -43,7 +43,10 @@ const userSchema = new mongoose.Schema({
     sentRequests: [{
         type: mongoose.Schema.Types.ObjectId,
         ref: "User",
-    }]
+    }],
+    memberOf:[
+    { type: mongoose.Schema.Types.ObjectId, ref: 'Group' }
+    ]
 });
 
 module.exports = mongoose.model("User", userSchema);

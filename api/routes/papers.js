@@ -1,46 +1,82 @@
 const router = require('express').Router();
-const Event = require('../models/Event');
-const Club = require('../models/Clubs');
-const User = require('../models/User');
-const Paper = require('..model/Paper');
-const Question = require('../models/Question')
-const CustomEvent = require("../models/CustomEvent")
+const Paper = require('../models/Paper');
 
-router.post("/create-paper",async (req, res) => {
-    try{
+
+router.post("/create-paper", async (req, res) => {
+    try {
+        const allQuestions = req.body.questions;
+
+        const questionFormat = allQuestions.map(question => {
+            const { question: questionText, options } = question;
+
+            const optionsWithImage = options.map(option => ({
+                ...option,
+                image: null,
+            }));
+
+            return {
+                ...question,
+                questionImage: null,
+                options: optionsWithImage,
+                ansVal: null,
+            };
+        });
+
+        const time = Number(req.body.timelimit);
+        let Private = true;
+
+        if (req.body.Private == 2) {
+            Private = false;
+        }
+
         const newPaper = new Paper({
             userId: req.body.userId,
             paperTitle: req.body.paperTitle,
-            timelimit: req.body.timelimit,
-            Private: req.body.Private,
+            TimeLimit: time,
+            Private: Private,
+            questions: questionFormat
         })
 
         const paper = await newPaper.save();
-        res.status(200).json(que);
-    }
-    catch(error){
+        console.log("Success")
+        res.status(200).json("A new paper has been created!");
+    } catch (error) {
+        console.log(error)
         res.status(500).json(error);
     }
 })
 
 
-// router.get("/getAllPapers/:filter", async (req, res) => {
-//     try {
-        
+router.get("/getPapers/:id", async (req, res) => {
+    try {
+        const { id } = req.params;
+        const papers = await Paper.find({ userId: id })
+        res.status(200).json(papers);
+    } catch (error) {
+        res.status(500).json(error);
+    }
+})
 
-//         const newQuestion = new Question({
-//             questionText: req.body.questionText,
-//             questionImage: req.body.questionImage,
-//             options: req.body.options,
-//             subject: req.body.subject
-//         });
+router.put("/update-paper/:paperId", async (req, res) => {
+    try {
+        const { paperId } = req.params;
+        const updatedFields = req.body;
 
-//         const que = await newQuestion.save();
-//         res.status(200).json(que);
-//     } catch (error) {
-//        res.status(500).json(error);
-//     }
-// })
+        const updatedPaper = await Paper.findByIdAndUpdate(
+            paperId,
+            { $set: updatedFields },
+            { new: true }
+        );
 
+        if (!updatedPaper) {
+            return res.status(404).json({ error: 'Paper not found' });
+        }
+
+        res.status(200).json(updatedPaper);
+    } catch (error) {
+        console.error(error);
+        res.status(500).json({ error: 'Internal Server Error' });
+    }
+});
 
 module.exports = router;
