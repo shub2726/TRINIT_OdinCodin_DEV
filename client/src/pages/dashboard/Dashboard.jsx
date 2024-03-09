@@ -12,15 +12,19 @@ import {
 } from "@chakra-ui/react";
 import Navbar from "../../components/Navbar";
 import Cookies from "universal-cookie";
-import { Tabs, TabList, TabPanels, Tab, TabPanel } from '@chakra-ui/react'
+import { Tabs, TabList, TabPanels, Tab, TabPanel,useToast } from '@chakra-ui/react'
 import axios from "axios";
 import { useEffect, useState } from "react";
+import { Link, useNavigate } from "react-router-dom";
 
 export default function Dashboard() {
   const cookies = new Cookies();
   const [userPapers, setUserPapers] = useState([])
   const [allPapers, setAllPapers] = useState([])
   const token = cookies.get("TOKEN");
+  const toast = useToast();
+
+  const navigate = useNavigate();
 
   const fetchUserPapers = async () => {
     try {
@@ -39,6 +43,34 @@ export default function Dashboard() {
         console.error('Error:', error);
     }
   }
+
+  const checkifMember = async (grpID) => {
+    try{
+      // console.log(grpID);
+      if (grpID == undefined) return false;
+      const value = await axios.post('http://localhost:8000/api/v1/groups/check-members',{"GroupID":grpID,"userID":token.user._id});
+      if (value.data){
+        navigate(`/groups/${grpID}`)
+      }
+      else{
+        toast({
+          title: "Paper not attempted. Cannot discuss",
+          position: 'top-left',
+          status: 'error',
+          duration: 1000,
+          isClosable: true,
+      })
+      }
+    } catch (error) {
+        console.error('Error:', error);
+        return false;
+    }
+  }
+
+  const redir1 = (grpID) =>{
+
+  }
+
 
   useEffect(() => {
     fetchPapers();
@@ -76,6 +108,10 @@ export default function Dashboard() {
                           <Button variant="solid" colorScheme="gray" color="gray">
                             Analytics
                           </Button>
+                            <Button variant="solid" colorScheme="gray" color="gray" onClick={() => checkifMember(paper.GroupID)}>
+                              Discuss
+                            </Button>
+                          
                         </ButtonGroup>
                       </CardFooter>
                     </Card>
@@ -104,6 +140,9 @@ export default function Dashboard() {
                           </Button>
                           <Button variant="solid" colorScheme="gray" color="gray">
                             Analytics
+                          </Button>
+                          <Button variant="solid" colorScheme="gray" color="gray" onClick={() => checkifMember(paper.GroupID)}>
+                            Discuss
                           </Button>
                         </ButtonGroup>
                       </CardFooter>
