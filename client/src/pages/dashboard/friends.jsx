@@ -161,7 +161,14 @@ export default function Friends() {
   };
 
   return (
-    <Flex flex={1} direction="row" justifyContent="space-between" padding={5} gap={10}>
+    <Flex
+      flex={1}
+      direction="row"
+      justifyContent="space-between"
+      height="100%"
+      padding={5}
+      gap={10}
+    >
       <Flex direction="row" flex={1} gap={10} flexWrap="wrap">
         {friends.map((index) => (
           <WrapItem key={index}>
@@ -176,11 +183,18 @@ export default function Friends() {
           </WrapItem>
         ))}
       </Flex>
-
-      <Divider orientation="vertical" />
-      <Flex justifySelf="flex-end" direction="column" gap="15px">
-        <Heading>Add Friends</Heading>
-        <InputGroup>
+      {/* <Divider alignSelf="stretch" orientation="vertical" /> */}
+      <Flex
+        justifySelf="flex-end"
+        direction="column"
+        gap="15px"
+        backgroundColor="rgba(255,255,255,0.8)"
+        padding="20px"
+        borderRadius="12px"
+        boxShadow="lg"
+      >
+        <Heading size="lg">Add Friends</Heading>
+        <InputGroup backgroundColor="white">
           <InputLeftElement pointerEvents="none">
             <svg
               xmlns="http://www.w3.org/2000/svg"

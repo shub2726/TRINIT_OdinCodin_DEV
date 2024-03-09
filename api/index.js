@@ -104,9 +104,9 @@ app.get('/auth/check-session', (req, res) => {
 });
 
 const authRoute = require("./routes/auth")
-
+const userRoute = require("./routes/users")
 app.use("/api/v1/auth", authRoute);
-
+app.use("/api/v1/users", userRoute)
 passportSetup();
 
 app.listen(process.env.PORT, () => {
