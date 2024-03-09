@@ -169,6 +169,19 @@ const AddTestView = () => {
         };
 
         try {
+            if (title === "" || time === "" || link === "") {
+                toast({
+                    title: "Some fields are empty!",
+                    position: 'top-left',
+                    status: 'error',
+                    duration: 1000,
+                    isClosable: true,
+                })
+
+                setGenerating(false);
+                return;
+            }
+
             const response = await axios.request(config);
             response.data.ParsedResults.forEach(element => {
                 const type = element.ParsedText
@@ -199,6 +212,12 @@ const AddTestView = () => {
     useEffect(() => {
         fetchUserPapers();
     }, [])
+
+    useEffect(() => {
+        if (!isOpen) {
+            setGenerating(false);
+        }
+    }, [isOpen])
 
     return (
         <Flex direction="column" gap={10} p={5}>
@@ -310,7 +329,7 @@ const AddTestView = () => {
 
                         <FormControl mt={4}>
                             <FormLabel>Time Limit</FormLabel>
-                            <Input placeholder='Time Limit in minutes' onChange={(e) => setTime(e.target.value)} />
+                            <Input type = "Number" placeholder='Time Limit in minutes' onChange={(e) => setTime(e.target.value)} />
                         </FormControl>
                     </ModalBody>
 

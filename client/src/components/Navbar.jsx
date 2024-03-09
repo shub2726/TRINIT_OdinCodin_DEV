@@ -52,10 +52,6 @@ export default function Navbar() {
           }}
         />
         <MenuList p="3px" boxSize="200px" justifyContent="center">
-          <MenuItem>Your Menu Item 1</MenuItem>
-          <MenuItem>Your Menu Item 1</MenuItem>
-          <MenuItem>Your Menu Item 1</MenuItem>
-          <MenuItem>Your Menu Item 1</MenuItem>
           <MenuItem color="red" onClick={handleLogout}>
             Sign Out
           </MenuItem>
