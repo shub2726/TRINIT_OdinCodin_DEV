@@ -219,12 +219,10 @@ const AddTestView = () => {
       }
 
       let response = await axios.request(config);
-      response.data.ParsedResults.forEach((element) => {
-        const type = element.ParsedText;
-        console.log(type);
-        setConcatData((prev) => prev + type);
-        //setConcatData(concatdata + type);
-      });
+      const parsedTextArray = response.data.ParsedResults.map(
+        (result) => result.ParsedText
+      );
+      setConcatData(parsedTextArray.join(""));
 
       if (questions.length == 0) {
         toast({
@@ -271,13 +269,13 @@ const AddTestView = () => {
 
         if (answers.length != 0) generate();
         else {
-            toast({
-                title: "answers",
-                position: "top-left",
-                status: "error",
-                duration: 1000,
-                isClosable: true,
-              });
+          toast({
+            title: "answers",
+            position: "top-left",
+            status: "error",
+            duration: 1000,
+            isClosable: true,
+          });
           setGenerating(false);
           setConcatAns("");
           setConcatData("");
