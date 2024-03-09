@@ -39,7 +39,6 @@ import { FormControl, FormLabel } from "@chakra-ui/react";
 import { useDisclosure } from "@chakra-ui/react";
 import axios from "axios";
 import QuestionParser from "./QuestionParser";
-import AnswerParser from "./AnswerParser";
 import Cards from "./Cards";
 import Cookies from "universal-cookie";
 import { useToast, Heading } from "@chakra-ui/react";
@@ -47,13 +46,14 @@ import { IconButton } from "@chakra-ui/react";
 import { CheckIcon } from "@chakra-ui/icons";
 import { Link } from "react-router-dom";
 import { BeatLoader } from "react-spinners";
+import AnswerParser from "./AnswerParser";
 
 const AddTestView = () => {
   const { isOpen, onOpen, onClose } = useDisclosure();
 
   const [title, setTitle] = useState("");
   const [link, setLink] = useState("");
-  const [aLink, setaLink] = useState("");
+  const [ansLink, setAnsLink] = useState("");
   const [time, setTime] = useState("");
   const [visibility, setVisibility] = useState("1");
   const [papers, setUserPapers] = useState([]);
@@ -70,7 +70,6 @@ const AddTestView = () => {
   const token = cookies.get("TOKEN");
   const toast = useToast();
   const [generating, setGenerating] = useState(false);
-  // https://ncert.nic.in/pdf/publication/exemplarproblem/classIX/science/ieep117.pdf
 
   const toggleSwitch = (paperId) => {
     const updatedPapers = papers.map((paper) =>
@@ -81,27 +80,30 @@ const AddTestView = () => {
   };
 
   const updateTime = (paperId, value) => {
-    // Find the paper by ID
     const updatedPapers = papers.map((paper) =>
       paper._id === paperId ? { ...paper, TimeLimit: Number(value) } : paper
     );
 
-    // Update the state with the new papers array
     setUserPapers(updatedPapers);
-
-    console.log(updatedPapers);
   };
 
   const [paperToUpdate, setPaperToUpdate] = useState("");
 
   const generate = async () => {
     try {
-      console.log(answers);
-      for (let i = 0; i < answers.length; i++) {
-        console.log("hi");
-        questions[i + 1].ansVal = answers[i].qn;
-      }
-      console.log(questions);
+      // Create a new array to hold updated questions
+      const updatedQuestions = questions.map((question, index) => {
+        // Check if there's a corresponding answer for this index
+        if (index !=0) {
+          // Update the answer value for this question
+          return { ...question, ansVal: answers[index-1].qn };
+        } else {
+          return { ...question, ansVal: 'a'}; // No corresponding answer found, return the original question
+        }
+      });
+
+      console.log(updatedQuestions);
+
       const response = await axios.post(
         "http://localhost:8000/api/v1/papers/create-paper",
         {
@@ -109,7 +111,7 @@ const AddTestView = () => {
           paperTitle: title,
           timelimit: time,
           Private: visibility,
-          questions: questions,
+          questions: updatedQuestions,
         },
         { withCredentials: true }
       );
@@ -124,9 +126,8 @@ const AddTestView = () => {
 
       setGenerating(false);
     } catch (error) {
-      // Handle error
       toast({
-        title: error.response.data.message + ".Please try again",
+        title: error.response.data.message + ". Please try again",
         position: "top-left",
         status: "error",
         duration: 1000,
@@ -151,7 +152,6 @@ const AddTestView = () => {
   const handleSubmit = async (value) => {
     try {
       const paperToUpdate = papers.find((paper) => paper._id === value);
-      console.log(paperToUpdate);
       const response = await axios.put(
         "http://localhost:8000/api/v1/papers/update-paper/" + value,
         paperToUpdate,
@@ -219,74 +219,53 @@ const AddTestView = () => {
       }
 
       let response = await axios.request(config);
-      const parsedTextArray = response.data.ParsedResults.map(
+      let parsedTextArray = response.data.ParsedResults.map(
         (result) => result.ParsedText
       );
       setConcatData(parsedTextArray.join(""));
-
-      if (questions.length == 0) {
-        toast({
-          title: "questions",
-          position: "top-left",
-          status: "error",
-          duration: 1000,
-          isClosable: true,
-        });
-        setGenerating(false);
-        setConcatAns("");
-        setConcatData("");
-        fetchData();
-        return;
-      } else {
-        let data1 = new FormData();
-        data1.append("url", aLink);
-        data1.append("language", "eng");
-        data1.append("scale", "true");
-        data1.append("isOverlayRequired", "false");
-        data1.append("iscreatesearchablepdf", "false");
-        data1.append("issearchablepdfhidetextlayer", "false");
-        data1.append("filetype", "pdf");
-        data1.append("detectOrientation", "false");
-        data1.append("isTable", "true");
-        config = {
-          method: "post",
-          maxBodyLength: Infinity,
-          url: "https://api.ocr.space/parse/image",
-          headers: {
-            apikey: "K81508780488957",
-            "Content-Type": "multipart/form-data", // Set the Content-Type manually
-          },
-          data: data1,
-        };
-        response = await axios.request(config);
-        // console.log(response)
-        response.data.ParsedResults.forEach((element) => {
-          const type = element.ParsedText;
-          //   console.log(type);
-          setConcatAns((prev) => prev + type);
-          //setConcatData(concatdata + type);
-        });
-
-        if (answers.length != 0) generate();
-        else {
-          toast({
-            title: "answers",
-            position: "top-left",
-            status: "error",
-            duration: 1000,
-            isClosable: true,
-          });
-          setGenerating(false);
-          setConcatAns("");
-          setConcatData("");
-          fetchData();
-          return;
-        }
-      }
     } catch (error) {
       console.log(error);
+      setGenerating(false);
     }
   };
+
+  useEffect(() => {
+    if (questions.length !== 0) fetchAns();
+  }, [questions]);
+
+  const fetchAns = async () => {
+    if (questions.length != 0) {
+      let data1 = new FormData();
+      data1.append("language", "eng");
+      data1.append("url", ansLink);
+      data1.append("scale", "true");
+      data1.append("isOverlayRequired", "false");
+      data1.append("iscreatesearchablepdf", "false");
+      data1.append("issearchablepdfhidetextlayer", "false");
+      data1.append("filetype", "pdf");
+      data1.append("detectOrientation", "false");
+      data1.append("isTable", "true");
+      let config = {
+        method: "post",
+        maxBodyLength: Infinity,
+        url: "https://api.ocr.space/parse/image",
+        headers: {
+          apikey: "K81508780488957",
+          "Content-Type": "multipart/form-data", // Set the Content-Type manually
+        },
+        data: data1,
+      };
+      let response = await axios.request(config);
+      let parsedTextArray = response.data.ParsedResults.map(
+        (result) => result.ParsedText
+      );
+      setConcatAns(parsedTextArray.join(""));
+    }
+  };
+
+  useEffect(() => {
+    if (answers.length !== 0) generate();
+  }, [answers]);
 
   useEffect(() => {
     fetchUserPapers();
@@ -297,7 +276,6 @@ const AddTestView = () => {
       setGenerating(false);
     }
   }, [isOpen]);
-
   return (
     <Flex direction="column" gap={10} p={5}>
       <Flex gap={10}>
@@ -399,6 +377,7 @@ const AddTestView = () => {
           setAnswers={setAnswers}
         />
       </div>
+
       <Modal
         initialFocusRef={initialRef}
         finalFocusRef={finalRef}
@@ -431,7 +410,7 @@ const AddTestView = () => {
               <FormLabel>Answer Link</FormLabel>
               <Input
                 placeholder="Answer link"
-                onChange={(e) => setaLink(e.target.value)}
+                onChange={(e) => setAnsLink(e.target.value)}
               />
             </FormControl>
 

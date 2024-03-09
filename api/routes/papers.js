@@ -20,7 +20,6 @@ router.post("/create-paper", async (req, res) => {
                 ...question,
                 questionImage: null,
                 options: optionsWithImage,
-                ansVal: null,
             };
         });
 
