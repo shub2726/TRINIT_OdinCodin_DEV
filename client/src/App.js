@@ -12,6 +12,7 @@ import Cookies from "universal-cookie";
 import Groups from './pages/dashboard/Groups';
 import AddTest from './components/addTest';
 import AddTestView from './components/addTestView';
+import EditQuestions from './components/editQuestions';
 
 function App() {
   const cookies = new Cookies();
@@ -41,6 +42,7 @@ function App() {
           <Route index element={<ProtectedRouteLogin><Login /></ProtectedRouteLogin>} />
         </Route>
         <Route path="/register" element={<Register />} />
+        <Route path="/editQuestions/:paperId" element={<EditQuestions />} />
         <Route path="/dashboard" element={
           <ProtectedRoute>
             <Navbar />

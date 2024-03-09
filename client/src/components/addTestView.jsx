@@ -25,7 +25,7 @@ import Cookies from "universal-cookie";
 import { useToast, Heading } from '@chakra-ui/react'
 import { IconButton } from '@chakra-ui/react'
 import { CheckIcon } from '@chakra-ui/icons'
-
+import { Link } from "react-router-dom";
 
 const AddTestView = () => {
     const { isOpen, onOpen, onClose } = useDisclosure()
@@ -49,12 +49,10 @@ const AddTestView = () => {
 
 
     const toggleSwitch = (paperId) => {
-        // Find the paper by ID
         const updatedPapers = papers.map((paper) =>
             paper._id === paperId ? { ...paper, Private: !paper.Private } : paper
         );
 
-        // Update the state with the new papers array
         setUserPapers(updatedPapers);
     };
 
@@ -246,12 +244,14 @@ const AddTestView = () => {
                                 <Divider />
                                 <CardFooter>
                                     <ButtonGroup spacing="2">
-                                        <Button variant="solid" colorScheme="blue">
-                                            <svg xmlns="http://www.w3.org/2000/svg" width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="#FFFFFF" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
-                                                <polygon points="16 3 21 8 8 21 3 21 3 16 16 3"></polygon>
-                                            </svg>
-                                            Edit questions
-                                        </Button>
+                                        <Link to={`/editQuestions/${paper._id}`}>
+                                            <Button variant="solid" colorScheme="blue">
+                                                <svg xmlns="http://www.w3.org/2000/svg" width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="#FFFFFF" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
+                                                    <polygon points="16 3 21 8 8 21 3 21 3 16 16 3"></polygon>
+                                                </svg>
+                                                Edit questions
+                                            </Button>
+                                        </Link>
                                         <Button variant="solid" colorScheme="green" onClick={() => handleSubmit(paper._id)}>
                                             Submit
                                         </Button>
@@ -264,6 +264,7 @@ const AddTestView = () => {
             </Flex>
             <div>
                 <QuestionParser text={concatdata} questions={questions} setQuestions={setQuestions} />
+                
             </div>
             <Modal
                 initialFocusRef={initialRef}
