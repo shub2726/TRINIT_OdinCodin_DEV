@@ -11,6 +11,9 @@ const questionSchema = new mongoose.Schema({
     options: {
         type: [],
     },
+    optionImages: {
+        type: [String],
+    },
     ansVal: {
         type: String,
         required: true,

@@ -2,7 +2,7 @@ const router = require('express').Router();
 const Event = require('../models/Event');
 const Club = require('../models/Clubs');
 const User = require('../models/User');
-const Paper = require('..model/Paper');
+const Paper = require('../model/Paper');
 const Question = require('../models/Question')
 const CustomEvent = require("../models/CustomEvent")
 

@@ -138,7 +138,7 @@ const Groups = () => {
             <Text  fontSize="6xl">Groups</Text>
             <Flex direction="column" gap="10px">
                 {groups.map((e, index) => (
-                    <Link to={`/groups/${e._id}`}>
+                    <Link to={`${e._id}`}>
                         <Button key={index} p="10px" w="200px">
                             <Text>{e.GroupName}</Text>
                         </Button>
