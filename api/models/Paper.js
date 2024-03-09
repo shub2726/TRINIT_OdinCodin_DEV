@@ -1,5 +1,5 @@
 const mongoose = require("mongoose");
-const Question = require("/Question")
+const Question = require("./Question")
 const paperSchema = new mongoose.Schema({
     userId: { 
         type: mongoose.Schema.Types.ObjectId, 
@@ -13,7 +13,7 @@ const paperSchema = new mongoose.Schema({
         type: Number,
         required: true
     },
-    questions: [Question.schema],
+    questions: [],
     Private: {
         type: Boolean,
         default: true
