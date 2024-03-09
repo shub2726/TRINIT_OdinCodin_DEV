@@ -62,7 +62,7 @@ export default function Login() {
                 path: "/",
             });
 
-            window.location.href = "/dashboard"
+            window.location.href = "/app/dashboard"
             // redirect url: window.location.href = "/clubAdmin";
         } catch (error) {
             // Handle error
