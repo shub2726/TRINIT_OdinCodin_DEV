@@ -50,7 +50,7 @@ router.post("/create-paper", async (req, res) => {
 router.get("/getAllPapers/", async (req, res) => {
     try {
         const { id } = req.params;
-        const papers = await Paper.find({});
+        const papers = await Paper.find({Private:false}).populate('userId');
         res.status(200).json(papers);
     } catch (error) {
         res.status(500).json(error);
