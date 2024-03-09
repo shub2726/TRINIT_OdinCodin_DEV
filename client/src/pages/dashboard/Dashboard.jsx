@@ -63,7 +63,7 @@ export default function Dashboard() {
                         <Stack mt="6" spacing="3">
                           <Heading size="md">{paper.paperTitle}</Heading>
                           <Text color="blue.600" fontSize="2xl">
-                            {token.user.username}
+                            {paper.userId.username}
                           </Text>
                         </Stack>
                       </CardBody>
