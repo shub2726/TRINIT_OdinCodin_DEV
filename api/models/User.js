@@ -27,7 +27,10 @@ const userSchema = new mongoose.Schema({
     password: {
         type: String,
         required: true
-    }
+    },
+    memberOf:[
+    { type: mongoose.Schema.Types.ObjectId, ref: 'Group' }
+    ]
 });
 
 module.exports = mongoose.model("User", userSchema);
