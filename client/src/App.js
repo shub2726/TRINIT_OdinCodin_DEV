@@ -61,7 +61,8 @@ function App() {
           <Route path="addTest" element={<AddTestView/>} />
           <Route path="editQuestions/:paperId" element={<EditQuestions/>} />
           <Route path="groups" element={<Groups />} />
-          <Route path="groups/:id" element={<GroupID />} />
+          <Route path="groups/:id" element={<GroupID ifTest={false}/>} />
+          <Route path="tests/:id" element={<GroupID ifTest={true}/>} />
           </Route>
       </Routes>
     </Router>
