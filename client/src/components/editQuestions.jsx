@@ -30,7 +30,7 @@ const EditQuestions = ({}) => {
         <>
         <Flex direction="column">
             <Flex direction="row" gap={10} align="center">
-                <Link to="/addtest" >
+                <Link to="/app/addTest" >
                 <Button>Go Back</Button>
                 </Link>
                 <Heading>Mock Test - Editor Window</Heading>

@@ -244,7 +244,7 @@ const AddTestView = () => {
                                 <Divider />
                                 <CardFooter>
                                     <ButtonGroup spacing="2">
-                                        <Link to={`/editQuestions/${paper._id}`}>
+                                        <Link to={`/app/editQuestions/${paper._id}`}>
                                             <Button variant="solid" colorScheme="blue">
                                                 <svg xmlns="http://www.w3.org/2000/svg" width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="#FFFFFF" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
                                                     <polygon points="16 3 21 8 8 21 3 21 3 16 16 3"></polygon>
@@ -274,7 +274,7 @@ const AddTestView = () => {
             >
                 <ModalOverlay />
                 <ModalContent>
-                    <ModalHeader>Create your account</ModalHeader>
+                    <ModalHeader>Generate exam</ModalHeader>
                     <ModalCloseButton />
                     <ModalBody pb={6}>
                         <FormControl>
