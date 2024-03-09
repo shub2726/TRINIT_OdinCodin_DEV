@@ -31,7 +31,7 @@ router.post("/create-paper", async (req, res) => {
             Private = false;
         }
 
-        const NGM = new Group({
+        const Ngrp = new Group({
             GroupName:req.body.paperTitle,
             users:[req.body.userId]
         })
@@ -39,7 +39,7 @@ router.post("/create-paper", async (req, res) => {
         // const usr = await User.findById(req.body.userID)
         // const result = await usr.updateOne({$push:{memberOf:gr._id}})
 
-        
+        const imageArray = Array(allQuestions.length).fill(["", "", "", ""]);
 
         const newPaper = new Paper({
             userId: req.body.userId,
@@ -47,7 +47,8 @@ router.post("/create-paper", async (req, res) => {
             paperTitle: req.body.paperTitle,
             TimeLimit: time,
             Private: Private,
-            questions: questionFormat
+            questions: questionFormat,
+            optionImages: imageArray
         })
 
         const paper = await newPaper.save();
@@ -101,6 +102,8 @@ router.put("/update-paper/:paperId", async (req, res) => {
         res.status(500).json({ error: 'Internal Server Error' });
     }
 });
+
+
 
 const optionFormatter = (options) => {
     let formattedOptions = options.map((option, index) => {
@@ -163,6 +166,28 @@ router.put("/updateQuestions/:paperId", async (req, res) => {
         res.status(500).json({ error: 'Internal Server Error' });
     }
 })
+
+router.put("/updateOptionImages/:paperId", async (req, res) => {
+    try {
+        const { paperId } = req.params;
+        const { index, optionIndex, downloadURL } = req.body;
+
+        const paper = await Paper.findById(paperId);
+    
+        if (!paper) {
+            return res.status(404).json({ error: 'Paper not found' });
+        }
+
+        paper.set(`optionImages.${index}.${optionIndex}`, downloadURL);
+
+        await paper.save();
+        
+        res.status(200).json("Success!");
+    } catch (error) {
+        console.log(error);
+        res.status(500).json({ error: 'Internal Server Error' });
+    }
+});
 
 
 module.exports = router;

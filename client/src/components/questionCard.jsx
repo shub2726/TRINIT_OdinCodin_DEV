@@ -5,7 +5,7 @@ import axios from 'axios';
 import { useToast, Stack } from '@chakra-ui/react';
 
 
-const QuestionCard = ({ question, index, paperId, updateQuestion, updateOptions, uploadQuestionImage }) => {
+const QuestionCard = ({ question, index, paperId, updateQuestion, updateOptions, uploadQuestionImage, uploadOptionImage }) => {
   const toast = useToast();
   const [questionText, setQuestionText] = useState(question.question);
   const [options, setOptions] = useState([...question.options])
@@ -38,7 +38,7 @@ const QuestionCard = ({ question, index, paperId, updateQuestion, updateOptions,
             {question.options.map((opt, optionIndex) => (
               <li key={optionIndex}>
                 <Input type="text" value={options[optionIndex]} onChange={(e) => handleOptionChange(e.target.value, optionIndex)} />
-                <Input type="file" placeholder='Add Image' width="20%" onChange={(e) => uploadQuestionImage(e, index, optionIndex)}/>
+                <Input type="file" placeholder='Add Image' width="20%" onChange={(e) => uploadOptionImage(e, index, optionIndex)}/>
                 <Button onClick={() => updateOptions(index, options)}>Edit option</Button>
               </li>
             ))}

@@ -18,6 +18,7 @@ const paperSchema = new mongoose.Schema({
         required: true
     },
     questions: [],
+    optionImages: [],
     Private: {
         type: Boolean,
         default: true

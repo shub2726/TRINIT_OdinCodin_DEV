@@ -1,5 +1,5 @@
 // Cards.jsx
-import React, { useState } from 'react';
+import React, { useEffect, useState } from 'react';
 import { Stack, CircularProgress } from '@chakra-ui/react';
 import axios from 'axios';
 import { useToast } from '@chakra-ui/react';
@@ -9,7 +9,6 @@ import { ref, uploadBytesResumable, getDownloadURL } from "firebase/storage";
 
 const Cards = ({ questions, paperId }) => {
   const toast = useToast();
-
   const uploadQuestionImage = async (e, index) => {
     const file = e.target.files[0];
     const date = new Date().getTime();
@@ -46,14 +45,10 @@ const Cards = ({ questions, paperId }) => {
     const date = new Date().getTime();
     const storageRef = ref(storage, `${paperId + index + date}`);
 
-
     await uploadBytesResumable(storageRef, file).then(async () => {
       getDownloadURL(storageRef).then(async (downloadURL) => {
-        let newQuestionsState = [...questions];
-        const lastElementIndex = newQuestionsState[index].options[optionIndex].length - 1;
-        newQuestionsState[index].options[optionIndex].image = downloadURL;
-        const response = await axios.put(`http://localhost:8000/api/v1/papers/updateQuestions/${paperId}`,
-          newQuestionsState, { withCredentials: true });
+        const response = await axios.put(`http://localhost:8000/api/v1/papers/updateOptionImages/${paperId}`,
+          {index: index, optionIndex: optionIndex, downloadURL: downloadURL}, { withCredentials: true });
         toast({
           title: 'Question image updated!',
           position: 'top-left',
@@ -143,6 +138,7 @@ const Cards = ({ questions, paperId }) => {
               updateQuestion={updateQuestion}
               updateOptions={updateOptions}
               uploadQuestionImage={uploadQuestionImage}
+              uploadOptionImage = {uploadOptionImage}
             />
           ))}
         </Stack>
