@@ -16,7 +16,7 @@ router.get("/getUsers", async (req, res) => {
                 { lastName: { $regex: searchPattern } }
             ];
         }
-        
+
         // Retrieve the current user's friends array from the database
         const currentUser = await User.findById(currentUserID);
         const friends = currentUser.friends;
@@ -112,13 +112,13 @@ router.post("/acceptFriendRequest/:userId", async (req, res) => {
 
 router.get("/getFriends", async (req, res) => {
     try {
-      const currentUserID = req.query.userID;
-      const currentUser = await User.findById(currentUserID).populate("friends");
-      const friends = currentUser.friends;
-      res.json(friends);
+        const currentUserID = req.query.userID;
+        const currentUser = await User.findById(currentUserID).populate("friends");
+        const friends = currentUser.friends;
+        res.json(friends);
     } catch (error) {
-      res.status(500).json({ message: error.message });
+        res.status(500).json({ message: error.message });
     }
-  });  
+});
 
 module.exports = router;
