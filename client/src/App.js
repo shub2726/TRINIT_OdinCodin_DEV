@@ -17,6 +17,7 @@ import { Outlet } from 'react-router-dom';
 import AddTestView from './components/addTestView';
 import EditQuestions from './components/editQuestions';
 import TestInterface from './pages/TestInterface';
+import ManualTests from './components/manualTests';
 
 function App() {
   const cookies = new Cookies();
@@ -62,6 +63,7 @@ function App() {
           <Route path="editQuestions/:paperId" element={<EditQuestions/>} />
           <Route path="groups" element={<Groups />} />
           <Route path="groups/:id" element={<GroupID />} />
+          <Route path="create-tool" element={<ManualTests/>} />
           </Route>
       </Routes>
     </Router>

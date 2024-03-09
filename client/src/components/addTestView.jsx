@@ -185,7 +185,6 @@ const AddTestView = () => {
             const response = await axios.request(config);
             response.data.ParsedResults.forEach(element => {
                 const type = element.ParsedText
-                console.log(type);
                 setConcatData((prev) => prev + type)
                 //setConcatData(concatdata + type);
             })
@@ -222,12 +221,15 @@ const AddTestView = () => {
     return (
         <Flex direction="column" gap={10} p={5}>
             <Flex gap={10}>
-                <Button colorScheme='blue'
-                    size="lg"
-                    width="100%"
-                >
-                    Create a test manually
-                </Button>
+                    <Link to="/app/create-tool" width="100%">
+                    <Button colorScheme='blue'
+                        size="lg"
+                        width="100%"
+                    >
+                            Create a test with the OdinCodin Tool
+                    </Button>
+                    </Link>
+
                 <Button colorScheme='blue'
                     size="lg"
                     width="100%"
@@ -261,7 +263,7 @@ const AddTestView = () => {
                                             <Editable placeholder={paper.TimeLimit}
                                                 onSubmit={(value) => updateTime(paper._id, value)}
                                                 onChange={() => setPaperToUpdate(prev => prev = paper._id)}
-                                                >
+                                            >
 
                                                 <EditablePreview />
                                                 <EditableInput type="Number" />
@@ -296,7 +298,7 @@ const AddTestView = () => {
             </Flex>
             <div>
                 <QuestionParser text={concatdata} questions={questions} setQuestions={setQuestions} />
-                
+
             </div>
             <Modal
                 initialFocusRef={initialRef}
@@ -329,14 +331,14 @@ const AddTestView = () => {
 
                         <FormControl mt={4}>
                             <FormLabel>Time Limit</FormLabel>
-                            <Input type = "Number" placeholder='Time Limit in minutes' onChange={(e) => setTime(e.target.value)} />
+                            <Input type="Number" placeholder='Time Limit in minutes' onChange={(e) => setTime(e.target.value)} />
                         </FormControl>
                     </ModalBody>
 
                     <ModalFooter>
                         <Button colorScheme='blue' mr={3} onClick={fetchData}
-                        isLoading = {generating}
-                        spinner={<BeatLoader size={8} color='white' />}
+                            isLoading={generating}
+                            spinner={<BeatLoader size={8} color='white' />}
                         >
                             Generate Test
                         </Button>
