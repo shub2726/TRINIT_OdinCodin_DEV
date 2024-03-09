@@ -42,7 +42,7 @@ function App() {
           <ProtectedRoute>
             <Navbar />
             <Box display="flex" height="100vh">
-              <Box width="15%" p="4"
+              <Box minWidth="175px" p="4"
                 borderWidth="1px"
                 overflow="hidden"
                 boxShadow="lg">
@@ -69,11 +69,11 @@ function App() {
             </Box>
           </ProtectedRoute>} />
 
-          <Route path="/friends" element={
+        <Route path="/friends" element={
           <ProtectedRoute>
             <Navbar />
             <Box display="flex" height="100vh">
-              <Box width="15%" p="4"
+              <Box minWidth="175px" p="4"
                 borderWidth="1px"
                 overflow="hidden"
                 boxShadow="lg">
@@ -96,7 +96,7 @@ function App() {
                   </Button>
                 </Stack>
               </Box>
-              <Friends/>
+              <Friends />
             </Box>
           </ProtectedRoute>} />
       </Routes>
