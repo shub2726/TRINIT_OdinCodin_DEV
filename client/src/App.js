@@ -1,8 +1,8 @@
-import logo from './logo.svg';
+// import logo from './logo.svg';
 import './App.css';
 import Dashboard from './pages/dashboard/Dashboard';
 import Friends from './pages/dashboard/friends';
-import { ChakraProvider } from '@chakra-ui/react'
+// import { ChakraProvider } from '@chakra-ui/react'
 import { CircularProgress, CircularProgressLabel, Box, Stack, Button, ButtonGroup } from '@chakra-ui/react'
 import Navbar from './components/Navbar';
 import Login from './components/Login';
@@ -10,7 +10,7 @@ import Register from './components/Register';
 import { BrowserRouter as Router, Route, Routes, Navigate } from 'react-router-dom';
 import Cookies from "universal-cookie";
 import Groups from './pages/dashboard/Groups';
-import AddTest from './components/addTest';
+// import AddTest from './components/addTest';
 import AddTestView from './components/addTestView';
 import TestInterface from './pages/TestInterface';
 

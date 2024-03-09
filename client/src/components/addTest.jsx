@@ -2,6 +2,7 @@ import React, {useState, useEffect} from "react";
 import axios from "axios";
 import QuestionParser from "./QuestionParser";
 import Cards from "./Cards";
+// import {Card}
 
 const AddTest = () => {
     const [questions, setQuestions] = useState([])

@@ -1,13 +1,13 @@
 import React from 'react'
-import { Accordion, AccordionIcon, AccordionItem, AccordionButton, AccordionPanel, Box, Flex, Stack, Button, HStack } from '@chakra-ui/react'
+import { Accordion, AccordionIcon, AccordionItem, AccordionButton, AccordionPanel, Box, Stack, Button, HStack } from '@chakra-ui/react'
 import { CircularProgress } from '@chakra-ui/react'
 
 const Cards = ({ questions }) => {
     return (
         <>
-            {questions.length === 0 ? (
+            {/* {questions.length === 0 ? (
                 <CircularProgress isIndeterminate color='green.300' />
-            ) : (
+            ) : ( */}
                 <Stack>
                     {questions.map((q, index) => (
                         <Accordion allowToggle key={index}>
