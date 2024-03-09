@@ -1,4 +1,4 @@
-import { Text , Menu , MenuButton , MenuList, MenuItem, Avatar, Flex, Heading, Spacer, Button } from '@chakra-ui/react'
+import { Text , Menu , MenuButton , MenuList, MenuItem, Avatar, Flex, Heading, Spacer, Button, Divider } from '@chakra-ui/react'
 import React, { useState } from "react";
 import axios from "axios";
 import Cookies from "universal-cookie";
@@ -27,6 +27,7 @@ export default function Navbar() {
                 <MenuItem >Your Menu Item 1</MenuItem>
                 <MenuItem >Your Menu Item 1</MenuItem>
                 <MenuItem >Your Menu Item 1</MenuItem>
+                <Divider borderWidth='1px' borderColor='gray.300'/>
                 <MenuItem  color='red' onClick={handleLogout}>Sign Out</MenuItem>
                 {/* Add more menu items as needed */}
             </MenuList>
