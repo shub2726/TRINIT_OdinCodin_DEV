@@ -47,6 +47,16 @@ router.post("/create-paper", async (req, res) => {
 })
 
 
+router.get("/getAllPapers/", async (req, res) => {
+    try {
+        const { id } = req.params;
+        const papers = await Paper.find({});
+        res.status(200).json(papers);
+    } catch (error) {
+        res.status(500).json(error);
+    } 
+})
+
 router.get("/getPapers/:id", async (req, res) => {
     try {
         const { id } = req.params;
@@ -78,5 +88,68 @@ router.put("/update-paper/:paperId", async (req, res) => {
         res.status(500).json({ error: 'Internal Server Error' });
     }
 });
+
+const optionFormatter = (options) => {
+    let formattedOptions = options.map((option, index) => {
+        const text = Object.values(option);
+        let len = text.length
+        let str = "";
+        for (let i = 0; i < len - 1; i++) {
+            str += text[i]
+        }
+        return str;
+    });
+
+    return formattedOptions;
+}
+
+router.get("/getQuestions/:queryString", async (req, res) => {
+    try {
+        const { queryString } = req.params;
+        const queryParams = queryString.split('|');
+
+        const userId = queryParams[0];
+        const paperId = queryParams[1];
+
+        const paper = await Paper.findOne({ _id: paperId, userId: userId }).populate('questions');
+        if (!paper) {
+            return res.status(404).json({ error: 'Paper not found' });
+        }
+
+        const formattedPaper = paper.questions.map(question => ({
+            ...question,
+            options: optionFormatter(question.options),
+        }));
+
+        return res.status(200).json(formattedPaper);
+
+    } catch (error) {
+        console.error(error);
+        return res.status(500).json({ error: 'Internal Server Error' });
+    }
+});
+
+router.put("/updateQuestions/:paperId", async (req, res) => {
+    try {
+        const { paperId } = req.params;
+        const updatedFields = req.body;
+
+        const updatedPaper = await Paper.findByIdAndUpdate(
+            paperId,
+            { $set: { questions: updatedFields } }, 
+            { new: true }
+        );
+
+        if (!updatedPaper) {
+            return res.status(404).json({ error: 'Paper not found' });
+        }
+
+        res.status(200).json(updatedPaper);
+    } catch (error) {
+        console.log(error)
+        res.status(500).json({ error: 'Internal Server Error' });
+    }
+})
+
 
 module.exports = router;

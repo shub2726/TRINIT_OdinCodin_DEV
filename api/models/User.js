@@ -28,6 +28,22 @@ const userSchema = new mongoose.Schema({
         type: String,
         required: true
     },
+    friends: [{
+        type: mongoose.Schema.Types.ObjectId,
+        ref: "User",
+    }],
+    testCount: {
+        type: Number,
+        default: 5
+    },
+    pendingRequests: [{
+        type: mongoose.Schema.Types.ObjectId,
+        ref: "User",
+    }],
+    sentRequests: [{
+        type: mongoose.Schema.Types.ObjectId,
+        ref: "User",
+    }],
     memberOf:[
     { type: mongoose.Schema.Types.ObjectId, ref: 'Group' }
     ]

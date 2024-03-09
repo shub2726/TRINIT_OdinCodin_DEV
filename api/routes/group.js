@@ -48,7 +48,7 @@ router.post("/join-group",async (req,res) => {
         const grp = await Group.findById(grpID);
         console.log(grp);
         const result = await grp.updateOne({$push:{users:req.body.userID}})
-        const usr = await User.findbyID(req.body.userID)
+        const usr = await User.findById(req.body.userID)
         const result2 = await usr.updateOne({$push:{memberOf:grpID}})
         res.status(200).json(grp);
     } catch(error){
