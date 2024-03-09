@@ -27,9 +27,9 @@ const Groups = () => {
     const [grpName,setGrpName] = useState("");
     const [groups,setGroups] = useState([])
     const { isOpen, onOpen, onClose } = useDisclosure()
-    const newGRP = async (e) => {
+    const newGRP = async () => {
         try{
-            const response = axios.post('http://localhost:8000/api/v1/groups/new-group',{
+            const response = await axios.post('http://localhost:8000/api/v1/groups/new-group',{
                 "userID":token.user._id,
                 "GroupName":grpName
             })
@@ -44,8 +44,9 @@ const Groups = () => {
               })
 
             setGrpName("");
-            setTimeout(onClose,1000)
             fetchGRPs();
+            setTimeout(onClose,1000)
+            
 
             
         } catch(error){
@@ -59,7 +60,7 @@ const Groups = () => {
         }
     }
 
-    const joinGRP = async (e) => {
+    const joinGRP = async () => {
         try {
             const response = await axios.post("http://localhost:8000/api/v1/groups/join-group",{
                 "grpID":grpID,
@@ -79,7 +80,7 @@ const Groups = () => {
             fetchGRPs();
             
             
-            console.log(response);
+            // console.log(response);
         } catch(error){
             console.log(error);
             toast({
@@ -94,8 +95,21 @@ const Groups = () => {
     }
 
     const fetchGRPs = async() => {
-        const response = await axios.post("http://localhost:8000/api/v1/groups/get-groups",{"userID":token.user._id})
-        setGroups(response.data)
+        try{
+            const response = await axios.post("http://localhost:8000/api/v1/groups/get-groups",{"userID":token.user._id})
+            setGroups(response.data)
+        } catch(error) {
+            // console.log(error);
+            toast({
+                title: error.response.data.message,
+                // description: "We've created your account for you.",
+                position: 'top-right',
+                status: 'success',
+                duration: 2000,
+                isClosable: true,
+            })
+        }
+        
     }
 
     useEffect(() => {
