@@ -90,7 +90,7 @@ export default function Dashboard() {
               <Wrap spacing="15px" justify="center" mt="15px">
                 {allPapers.map((paper, index) => (
                   <WrapItem key={index}>
-                    <Card maxW="sm" p="20px" border="1px" borderColor="gray.300">
+                    <Card maxW="md" p="8px" border="1px" borderColor="gray.300">
                       <CardBody>
                         <Stack mt="6" spacing="3">
                           <Heading size="md">{paper.paperTitle}</Heading>
@@ -123,7 +123,7 @@ export default function Dashboard() {
               <Wrap spacing="15px" justify="center" mt="15px">
                 {userPapers.map((paper, index) => (
                   <WrapItem key={index}>
-                    <Card maxW="sm" p="20px" border="1px" borderColor="gray.300">
+                    <Card maxW="md" p="8px" border="1px" borderColor="gray.300">
                       <CardBody>
                         <Stack mt="6" spacing="3">
                           <Heading size="md">{paper.paperTitle}</Heading>
