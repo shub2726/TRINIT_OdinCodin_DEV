@@ -1,4 +1,5 @@
 const Analytics = require('../models/Analytics');
+const Paper = require('../models/Paper');
 const router = require('express').Router();
 
 router.post('/submit-paper/', async (req, res) => {
@@ -22,14 +23,32 @@ router.post('/submit-paper/', async (req, res) => {
             }
         }
 
-        
+        let score = 0;
+
+        const paper = await Paper.findOne({ _id: paperId });
+
+        if (!paper) {
+        return res.status(404).json({ error: 'Paper not found' });
+        }
+
+        const questions = paper.questions;
+
+        for (let i = 0; i < userAnswersLetters.length; i++) {
+            if (userAnswersLetters[i] === questions[i].ansval) {
+                score += 4;
+            } else if (userAnswersLetters[i] === 'u') {
+                score += 0;
+            } else {
+                score -= 1;
+            }
+        }
 
       const newAnalytics = new Analytics({
         userId: userId,
         paperId: paperId,
         userAnswers: userAnswersLetters,
         timeWasted: timeWasted,
-        totalScore: totalScore,
+        totalScore: score,
         scorePerQuestion: scorePerQuestion,
       });
   
