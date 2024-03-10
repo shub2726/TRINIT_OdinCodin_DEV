@@ -7,6 +7,7 @@ import {
     FormHelperText,
     Stack,
     Container,
+    Image
 } from '@chakra-ui/react'
 
 import { Flex, Spacer, Box } from '@chakra-ui/react'
@@ -121,7 +122,7 @@ export default function Register() {
                     p="6"
                     boxShadow="lg"
                 >
-                    <Heading>TestSeva</Heading>
+                    <Image h="75px" src="/logo.png" alt="OdinCodin Mock Test Generator" />
                     <FormControl>
                         <Flex direction="column" align="center" justify="center" height="100vh">
                             <Flex direction="row">
@@ -184,6 +185,7 @@ export default function Register() {
                             >
                                 Register
                             </Button>
+                            <a href="/">Already have an account? Login</a>
                         </Flex>
                     </FormControl>
                 </Box>

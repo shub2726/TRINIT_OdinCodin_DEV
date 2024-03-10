@@ -55,7 +55,7 @@ export default function Dashboard() {
       if (grpID == undefined) return false;
       const value = await axios.post('http://localhost:8000/api/v1/groups/check-members',{"GroupID":grpID,"userID":token.user._id});
       if (value.data){
-        navigate(`/app/groups/${grpID}`)
+        navigate(`/app/tests/${grpID}`)
       }
       else{
         toast({

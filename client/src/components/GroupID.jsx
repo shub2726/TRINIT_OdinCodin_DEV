@@ -20,7 +20,7 @@ import axios from "axios";
 import Cookies from "universal-cookie";
 import { useToast } from "@chakra-ui/react";
 
-const GroupID = () => {
+const GroupID = ({ifTest}) => {
   const cookies = new Cookies();
   const toast = useToast();
   const token = cookies.get("TOKEN");
@@ -95,11 +95,12 @@ const GroupID = () => {
 
   return (
     <>
+        
       <Stack m="10px" w="800px" divider={<StackDivider />}>
-        <Flex direction="column" gap="10px" m="10px">
+      {!ifTest && <Flex direction="column" gap="10px" m="10px">
           <Text fontSize="2xl">Group ID: {id}</Text>
           <Text>Others can use the above ID to join this group.</Text>
-        </Flex>
+        </Flex>}
         <Box>
           <Card>
             {/* <CardHeader>
