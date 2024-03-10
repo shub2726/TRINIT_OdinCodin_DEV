@@ -144,7 +144,7 @@ export default function Dashboard() {
                                   paper.dislikes_users.length}
                               </Text>
                               <ArrowDownIcon
-                                cursor="pointer"
+                             cursor="pointer"
                                 onClick={() => handleDislike(paper._id)}
                                 boxSize={7}
                               />
@@ -195,6 +195,7 @@ export default function Dashboard() {
 
                             <VStack>
                               <ArrowUpIcon
+                            cursor="pointer"
                                 onClick={() => handleLike(paper._id)}
                                 boxSize={7}
                               />
@@ -203,6 +204,7 @@ export default function Dashboard() {
                                   paper.dislikes_users.length}
                               </Text>
                               <ArrowDownIcon
+                            cursor="pointer"
                                 onClick={() => handleDislike(paper._id)}
                                 boxSize={7}
                               />
