@@ -26,6 +26,11 @@ export default function Dashboard() {
 
   const navigate = useNavigate();
 
+  const paperAttempt = (testId) => {
+    console.log(testId._id);
+    navigate(`/attempt/${testId._id}`);
+  }
+
   const fetchUserPapers = async () => {
     try {
         const response = await axios.get('http://localhost:8000/api/v1/papers/getPapers/' + token.user._id);
@@ -102,7 +107,7 @@ export default function Dashboard() {
                       <Divider />
                       <CardFooter>
                         <ButtonGroup spacing="2">
-                          <Button variant="solid" colorScheme="green">
+                          <Button variant="solid" colorScheme="green" onClick={() => paperAttempt(paper)}>
                             Attempt Now
                           </Button>
                           <Button variant="solid" colorScheme="gray" color="gray">

@@ -1,6 +1,7 @@
 const router = require('express').Router();
 const Paper = require('../models/Paper');
-const Group = require('../models/Group')
+const Group = require('../models/Group');
+const { findOne } = require('../models/User');
 
 
 router.post("/create-paper", async (req, res) => {
@@ -136,6 +137,29 @@ router.get("/getQuestions/:queryString", async (req, res) => {
             ...question,
             options: optionFormatter(question.options),
         }));
+
+        return res.status(200).json(formattedPaper);
+
+    } catch (error) {
+        console.error(error);
+        return res.status(500).json({ error: 'Internal Server Error' });
+    }
+});
+
+router.get("/getPaper/:id", async (req, res) => {
+    try {
+        const papId = req.params.id;
+        const paper = await Paper.findOne({_id:papId});
+
+        if(!paper) return res.status(404).json("the question paper does not exist");
+
+        const formattedPaper = {
+            ...paper, // Copy all existing fields from the original paper
+            questions: paper.questions.map(question => ({
+              ...question, // Copy all existing fields from the original question
+              options: optionFormatter(question.options), // Format the options field
+            })),
+          };
 
         return res.status(200).json(formattedPaper);
 

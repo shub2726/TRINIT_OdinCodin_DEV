@@ -4,6 +4,7 @@ import Navbar from "../../components/Navbar";
 import Cookies from "universal-cookie";
 import { Tabs, TabList, TabPanels, Tab, TabPanel } from '@chakra-ui/react'
 
+
 export default function Dashboard() {
   const cookies = new Cookies();
 

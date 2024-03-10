@@ -45,7 +45,7 @@ function App() {
         <Route path="/">
           <Route index element={<ProtectedRouteLogin><Login /></ProtectedRouteLogin>} />
         </Route>
-        <Route path="/test" element={<TestInterface />}/>
+        <Route path="attempt/:testId" element={<TestInterface />}/>
         <Route path="/register" element={<Register />} />
         <Route path="/app" element={
           <ProtectedRoute>

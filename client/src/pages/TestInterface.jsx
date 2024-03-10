@@ -1,14 +1,59 @@
 import { useState,useEffect } from "react";
-import { chakra, Box, Wrap, WrapItem, Grid, GridItem, Radio, RadioGroup, Modal, ModalOverlay, ModalContent, ModalHeader, ModalCloseButton, ModalBody, ModalFooter } from "@chakra-ui/react";
+import { chakra, Box, Wrap, WrapItem, Grid, GridItem, Radio, RadioGroup, Modal, ModalOverlay, ModalContent, ModalHeader, ModalCloseButton, ModalBody, ModalFooter, Toast, useToast } from "@chakra-ui/react";
 import { Card, CardBody, Stack, Heading, Text, Divider, CardFooter, Button, ButtonGroup,Flex,Spacer,Avatar } from "@chakra-ui/react";
 // import Navbar from "../../components/Navbar";
 import Cookies from "universal-cookie";
 import { Tabs, TabList, TabPanels, Tab, TabPanel } from '@chakra-ui/react'
 import { ArrowLeftIcon, ArrowRightIcon } from "@chakra-ui/icons";
+import { Navigate, useNavigate, useParams } from "react-router-dom";
+import axios from "axios";
 
 export default function TestInterface() {
+    const toast = useToast()
     const cookies = new Cookies();
     const token = cookies.get("TOKEN");
+
+    useEffect(() => {
+        const launchFullScreen = (element) => {
+          if (element.requestFullscreen) {
+            element.requestFullscreen();
+          } else if (element.mozRequestFullScreen) {
+            element.mozRequestFullScreen();
+          } else if (element.webkitRequestFullscreen) {
+            element.webkitRequestFullscreen();
+          } else if (element.msRequestFullscreen) {
+            element.msRequestFullscreen();
+          }
+        };
+    
+        const exitFullScreen = () => {
+          if (
+            document.fullscreenElement ||
+            document.mozFullScreenElement ||
+            document.webkitFullscreenElement ||
+            document.msFullscreenElement
+          ) {
+            if (document.exitFullscreen) {
+              document.exitFullscreen();
+            } else if (document.mozCancelFullScreen) {
+              document.mozCancelFullScreen();
+            } else if (document.webkitExitFullscreen) {
+              document.webkitExitFullscreen();
+            } else if (document.msExitFullscreen) {
+              document.msExitFullscreen();
+            }
+          }
+        };
+    
+        // Fullscreen the document body on component mount
+        launchFullScreen(document.documentElement);
+    
+        // Exit fullscreen on component unmount (optional)
+        return () => {
+          exitFullScreen();
+        };
+      }, []);
+
 
     const [value, setValue] = useState('1');
 
@@ -16,11 +61,17 @@ export default function TestInterface() {
         clipPath: "polygon(20% 0%, 90% 20%, 90% 80%, 20% 100%)",
     };
 
+    const navigate = useNavigate();
 
-    const [seconds, setSeconds] = useState(10);
-    const [minutes, setMinutes] = useState(1);
+    const [seconds, setSeconds] = useState(0);
+    const [minutes, setMinutes] = useState(0);
     const [hours, setHours] = useState(0);
     const [isModalOpen, setIsModalOpen] = useState(false);
+    const [questionPaper,setQuestionPaper] = useState();
+    const [selectedAnswers, setSelectedAnswers] = useState([]);
+    const [questionButton, setQuestionButton] = useState([]);
+    const [currentQuestion,setCurrentQuestion] = useState(1);
+
 
     useEffect(() => {
         const timerInterval = setInterval(() => {
@@ -45,10 +96,175 @@ export default function TestInterface() {
 
       const handleTimerEnd = () =>{
         setIsModalOpen(true);
+        setTimeout(function() {
+            navigate('/app/dashboard');
+            console.log("This will be executed after 2 seconds");
+          }, 2000);
       }
 
       const handleCloseModal = () => {
         setIsModalOpen(false);
+      };
+    // const [paperId, setPaperId] = useState(null); // State variable to store paperId
+
+    const { testId } = useParams(); // Get paperId from the URL using useParams
+
+    useEffect(() => {
+        const fetchData = async () => {
+            try {
+                if (testId) {
+                    // Make an API request to fetch the question paper based on the paperId
+                    // Replace the placeholder URL with your actual API endpoint
+                    const response = await axios.get(`http://localhost:8000/api/v1/papers/getPaper/${testId}`);
+                    setQuestionPaper(response.data); // Assuming your question paper data is stored in response.data
+                    console.log(response.data);
+                }
+            } catch (error) {
+                console.error("Error fetching question paper:", error);
+            }
+        };
+    
+        fetchData();
+    }, [testId]);
+
+    useEffect(() => {
+        if (questionPaper) {
+            setHours(Math.floor(questionPaper._doc.TimeLimit/60) || 0);
+            setMinutes(questionPaper._doc.TimeLimit%60 || 99);
+            setSelectedAnswers(Array(questionPaper.questions.length).fill(0));
+            setQuestionButton(Array(questionPaper.questions.length).fill(0));
+        }
+
+    }, [questionPaper]);
+
+    const handleQuestionButtonClick = (questionNumber) => {
+        // Update the value state when a question button is clicked
+        if(selectedAnswers[currentQuestion] === 0){
+            questionButton[currentQuestion] = 2;
+        }else{
+            questionButton[currentQuestion] = 1;
+        }
+        setValue(questionNumber.toString());
+        setCurrentQuestion(questionNumber)
+    };
+
+    
+    const handleOptionChange = (value) => {
+        const updatedAnswers = selectedAnswers.map((c, i) => (i === currentQuestion ? value : c));
+      
+        setSelectedAnswers(updatedAnswers);
+      };
+      
+      // Use console.log outside the event handler
+      useEffect(() => {
+        console.log(selectedAnswers); // This will log the updated state
+      }, [selectedAnswers]);
+
+      const handleSaveAndNext = () => {
+        // Check if an answer is selected for the current question
+        if (selectedAnswers[currentQuestion] !== 0) {
+      
+          // Proceed to the next question
+          const nextQuestion = currentQuestion + 1;
+          questionButton[currentQuestion] = 1;
+          handleQuestionButtonClick(nextQuestion);
+        } else {
+            toast({
+                title: "Please Select an Answer",
+                position: 'bottom-right',
+                status: 'error',
+                duration: 1000,
+                isClosable: true,
+            })
+        }
+      };
+
+      const handleSaveAndMarkForReview = () => {
+        // Check if an answer is selected for the current question
+        if (selectedAnswers[currentQuestion] !== 0) {
+      
+          // Proceed to the next question
+          const nextQuestion = currentQuestion + 1;
+          questionButton[currentQuestion] = 4;
+          handleQuestionButtonClick(nextQuestion);
+        } else {
+        //   console.log("Please select an answer before proceeding.");
+        toast({
+            title: "Please Select an Answer",
+            position: 'bottom-right',
+            status: 'error',
+            duration: 1000,
+            isClosable: true,
+        })
+        }
+      };
+
+      const handleClearResponse = () => {
+        const updatedAnswers = selectedAnswers.map((c, i) => (i === currentQuestion ? 0 : c));
+        setSelectedAnswers(updatedAnswers);
+      };
+
+      const handleMarkForReviewAndNext = () => {
+            const nextQuestion = currentQuestion + 1;
+            questionButton[currentQuestion] = 3;
+            handleQuestionButtonClick(nextQuestion);
+      };
+
+      const handleNext = () => {
+            const nextQuestion = currentQuestion + 1;
+            if(selectedAnswers[currentQuestion] ===0){
+                questionButton[currentQuestion] = 2;
+            }else{
+                questionButton[currentQuestion] = 1;
+            }
+            handleQuestionButtonClick(nextQuestion);
+      }
+
+    const handlePrev = () => {
+        const prevQuestion = currentQuestion - 1;
+        if(selectedAnswers[currentQuestion] ===0){
+            questionButton[currentQuestion] = 2;
+        }else{
+            questionButton[currentQuestion] = 1;
+        }
+        handleQuestionButtonClick(prevQuestion);
+    }
+
+      const getButtonProps = (index) => {
+        let buttonProps = {
+          size: "md",
+          onClick: () => handleQuestionButtonClick(index + 1),
+          w: "40px",
+        };
+        if (questionButton[index+1] === 1){ //answered questions
+            buttonProps.style = {...trapeziumStyles}
+            buttonProps.borderRadius="0" 
+            buttonProps.colorScheme="green" 
+        }else if (questionButton[index+1] === 2) { //unanswered questions
+            buttonProps.style={...trapeziumStyles} 
+            buttonProps.borderRadius="0" 
+            buttonProps.colorScheme="red" 
+        } else if (questionButton[index + 1] === 3) { //marked for review
+            buttonProps.borderRadius = 'full'
+            buttonProps.colorScheme = 'purple';
+        } else if (questionButton[index + 1] === 4) { //marked for review and evaluation
+            buttonProps.borderRadius = 'full';
+            buttonProps.colorScheme = 'purple';
+            buttonProps.position = 'relative';
+            buttonProps.rightIcon = (
+                <Box
+                  key={`circle-${index}`}
+                  position="absolute"
+                  bottom="-0.7"
+                  right="-0.5"
+                  width="20px"
+                  height="20px"
+                  borderRadius="full"
+                  backgroundColor="green.400"
+                />
+            );
+        }
+        return buttonProps;
       };
 
   return (
@@ -82,12 +298,16 @@ export default function TestInterface() {
             <Text>
                 Candidate Name : {token.user.firstName} {token.user.lastName}
             </Text>
+            {questionPaper && (
+                <>
             <Text>
-                Test Name : {/* we will take the name of the test after fetching the QP*/}
+                Test Name : {questionPaper._doc.paperTitle}
             </Text>
             <Text>
-                Total Time : x minutes
+                Total Time : {questionPaper._doc.TimeLimit} minutes
             </Text>
+            </>
+            )}
         </Stack>
     </ Flex>
     <Flex bgColor='orange' p='15px' alignItems='center' >
@@ -106,49 +326,54 @@ export default function TestInterface() {
     <Grid templateColumns="70% 30%" gap={4}>
         <GridItem colSpan={1}>
             <Box height='100%' p="20px" display='flex' flexDirection="column" >
-                <Text fontWeight='bold' fontSize="2xl">Question y</Text>
-                <Divider borderWidth="1px" borderColor="black"/>
-                <Box width="85%" maxHeight="350px" overflowY="scroll"
-                css={{
-                    '::-webkit-scrollbar': {
-                      width: '5px', // Adjust the width as needed
-                    },
-                    '::-webkit-scrollbar-thumb': {
-                      backgroundColor: 'gray',
-                      borderRadius: '10px', // Adjust the border radius as needed
-                    },
-                    '::-webkit-scrollbar-track': {
-                      backgroundColor: 'transparent',
-                    },
-                  }}
-                >
-                    <Text fontSize='xl' p='25px' fontWeight='500'>question: Lorem ipsum dolor sit amet consectetur adipisicing elit. At nobis est provident, facilis dignissimos mollitia vitae, perferendis suscipit optio voluptatem hic quasi beatae adipisci, voluptas id officiis reprehenderit laborum sunt aut libero vero molestias. Maxime ipsa suscipit accusantium eius doloribus. Reprehenderit quas facere odio saepe similique dolorum voluptate ipsa fugit. Libero voluptatem hic debitis culpa, a quam ut ipsum blanditiis minima ducimus nisi accusamus vel asperiores omnis, quia repellendus ipsam?</Text>
-                    <RadioGroup p="15px" onChange={setValue} value={value}>
-                    <Stack direction='column'>
-                        <Radio size="lg" value='1'><Text fontSize="20px">First</Text></Radio>
-                        <Radio size="lg" value='2'><Text fontSize="20px">Second</Text></Radio>
-                        <Radio size="lg" value='3'><Text fontSize="20px">Third</Text></Radio>
-                        <Radio size="lg" value='4'><Text fontSize="20px">Fourth</Text></Radio>
+                {questionPaper && (
+                    <>
+                    <Text fontWeight='bold' fontSize="2xl">{`Question ${value}`}</Text>
+                    <Divider borderWidth="1px" borderColor="black"/>
+                    <Box width="85%" maxHeight="350px" overflowY="scroll"
+                    css={{
+                        '::-webkit-scrollbar': {
+                        width: '5px', // Adjust the width as needed
+                        },
+                        '::-webkit-scrollbar-thumb': {
+                        backgroundColor: 'gray',
+                        borderRadius: '10px', // Adjust the border radius as needed
+                        },
+                        '::-webkit-scrollbar-track': {
+                        backgroundColor: 'transparent',
+                        },
+                    }}
+                    >
+                        <Text fontSize='xl' p='25px' fontWeight='500'>{questionPaper.questions[parseInt(value)].question}</Text>
+                        <RadioGroup p="15px" onChange={handleOptionChange} value={selectedAnswers[parseInt(value)]}>
+                        <Stack direction='column'>
+                            {questionPaper.questions[parseInt(value)].options.map((option, index) => (
+                                <Radio key={index} size="lg" value={index + 1}>
+                                    <Text fontSize="20px">{option}</Text>
+                                </Radio>
+                            ))}
 
-                    </Stack>
-                    </RadioGroup>
-                </Box>
-                <Divider borderWidth="1px" borderColor="black"/>
-                <Flex p="10px" gap="15px">
-                    <Button borderRadius="0px" colorScheme='green'>SAVE & NEXT</Button>
-                    <Button borderRadius="0px" colorScheme='orange'>SAVE & MARK FOR REVIEW</Button>
-                    <Button borderRadius="0px" colorScheme='white' color="black" borderColor="black" borderWidth="1px">CLEAR RESPONSE</Button>
-                    <Button borderRadius="0px" colorScheme='blue'>MARK FOR REVIEW AND NEXT</Button>
-                </Flex>
+                        </Stack>
+                        </RadioGroup>
+                    </Box>
+                    <Divider borderWidth="1px" borderColor="black"/>
+                    <Flex p="10px" gap="15px">
+                        <Button borderRadius="0px" colorScheme='green' onClick={handleSaveAndNext}>SAVE & NEXT</Button>
+                        <Button borderRadius="0px" colorScheme='orange' onClick={handleSaveAndMarkForReview}>SAVE & MARK FOR REVIEW</Button>
+                        <Button borderRadius="0px" colorScheme='white' color="black" borderColor="black" borderWidth="1px" onClick={handleClearResponse}>CLEAR RESPONSE</Button>
+                        <Button borderRadius="0px" colorScheme='blue' onClick={handleMarkForReviewAndNext}>MARK FOR REVIEW AND NEXT</Button>
+                    </Flex>
 
-                <Flex bgColor="gray.300" gap="2px" height="60px" alignItems="center" p="15px">
-                <Button size="md" borderRadius="0px" colorScheme='white' color="black" borderWidth="1px" borderColor="black"><ArrowLeftIcon p="2px"/>PREV</Button>
-                <Button size="md" borderRadius="0px" colorScheme='white' color="black" borderWidth="1px" borderColor="black">NEXT<ArrowRightIcon p="2px" /></Button>
+                    <Flex bgColor="gray.300" gap="2px" height="60px" alignItems="center" p="15px">
+                    <Button size="md" borderRadius="0px" colorScheme='white' color="black" borderWidth="1px" borderColor="black" isDisabled={currentQuestion === 1} onClick={handlePrev}><ArrowLeftIcon p="2px"/>PREV</Button>
+                    <Button size="md" borderRadius="0px" colorScheme='white' color="black" borderWidth="1px" borderColor="black" isDisabled={currentQuestion === questionPaper.questions.length-1} onClick={handleNext}>NEXT<ArrowRightIcon p="2px" /></Button>
 
-                <Spacer />
-                <Button size="md" borderRadius="0px" colorScheme='green'>SUBMIT</Button>
+                    <Spacer />
+                    <Button size="md" borderRadius="0px" colorScheme='green'>SUBMIT</Button>
 
-                </Flex>
+                    </Flex>
+                    </>
+                )}
             </Box>
         </GridItem>
         <GridItem colSpan={1}>
@@ -197,48 +422,12 @@ export default function TestInterface() {
 
 
                 <Flex flexWrap="wrap" gap="12px" p="20px">
-                    <Button size="md" bgColor="gray.300">1</Button>
-                    <Button size="md">1</Button>
-                    <Button size="md">1</Button>
-                    <Button size="md">1</Button>
-                    <Button size="md">1</Button>
-                    <Button size="md">1</Button>
-                    <Button size="md">1</Button>
-                    <Button size="md">1</Button>
-                    <Button size="md">1</Button>
-                    <Button size="md">1</Button>
-                    <Button size="md">1</Button>
-                    <Button size="md">1</Button>
-                    <Button size="md">1</Button>
-                    <Button size="md">1</Button>
-                    <Button size="md">1</Button>
-                    <Button size="md">1</Button>
-                    <Button size="md">1</Button>
-                    <Button size="md">1</Button>
-                    <Button size="md">1</Button>
-                    <Button size="md">1</Button>
-                    <Button size="md">1</Button>
-                    <Button size="md">1</Button>
-                    <Button size="md">1</Button>
-                    <Button size="md">1</Button>
-                    <Button size="md">1</Button>
-                    <Button size="md">1</Button>
-                    <Button size="md">1</Button>
-                    <Button size="md">1</Button>
-                    <Button size="md">1</Button>
-                    <Button size="md">1</Button>
-                    <Button size="md">1</Button>
-                    <Button size="md">1</Button>
-                    <Button size="md">1</Button>
-                    <Button size="md">1</Button>
-                    <Button size="md">1</Button>
-                    <Button size="md">1</Button>
-                    <Button size="md">1</Button>
-                    <Button size="md">1</Button>
-                    <Button size="md">1</Button>
-                    <Button size="md">1</Button>
-
-                    
+                    {questionPaper &&
+                        questionPaper.questions.slice(0,-1).map((question, index) => (
+                        <Button key={index} {...getButtonProps(index)}>
+                            {String(index + 1).padStart(2, '0')}
+                        </Button>
+                    ))}
                 </Flex>
         </GridItem>
     </Grid>
