@@ -26,10 +26,7 @@ import axios from "axios";
 import { useEffect, useState } from "react";
 import { Link, useNavigate } from "react-router-dom";
 
-import { 
-  ArrowUpIcon,
-  ArrowDownIcon
- } from "@chakra-ui/icons";
+import { ArrowUpIcon, ArrowDownIcon } from "@chakra-ui/icons";
 
 export default function Dashboard() {
   const cookies = new Cookies();
@@ -88,17 +85,17 @@ export default function Dashboard() {
 
   const handleLike = async (paperId) => {
     try {
-      console.log("hi")
+      console.log("hi");
       await axios.put(
         `http://localhost:8000/api/v1/papers/updateLikes/${paperId}?userId=${token.user._id}`
       );
       fetchPapers();
-      console.log("done")
+      fetchUserPapers();
+      console.log("done");
     } catch (error) {
       console.error("Error:", error);
     }
   };
-  
 
   const handleDislike = async (paperId) => {
     try {
@@ -106,6 +103,7 @@ export default function Dashboard() {
         `http://localhost:8000/api/v1/papers/updateDislikes/${paperId}?userId=${token.user._id}`
       );
       fetchPapers();
+      fetchUserPapers();
     } catch (error) {
       console.error("Error:", error);
     }
@@ -129,15 +127,29 @@ export default function Dashboard() {
               <Wrap spacing="15px" justify="center" mt="15px">
                 {allPapers.map((paper, index) => (
                   <WrapItem key={index}>
-                    <Card
-                      maxW="md"
-                      p="8px"
-                      border="1px"
-                      borderColor="gray.300"
-                    >
+                    <Card maxW="sm" p="8px" border="1px" borderColor="gray.300">
                       <CardBody>
                         <Stack mt="6" spacing="3">
-                          <Heading size="md">{paper.paperTitle}</Heading>
+                          <Flex direction="row" justify="space-between">
+                            <Heading size="md">{paper.paperTitle}</Heading>
+
+                            <VStack>
+                              <ArrowUpIcon
+                                cursor="pointer"
+                                onClick={() => handleLike(paper._id)}
+                                boxSize={7}
+                              />
+                              <Text fontSize="lg">
+                                {paper.likes_users.length -
+                                  paper.dislikes_users.length}
+                              </Text>
+                              <ArrowDownIcon
+                                cursor="pointer"
+                                onClick={() => handleDislike(paper._id)}
+                                boxSize={7}
+                              />
+                            </VStack>
+                          </Flex>
                           <Text color="blue.600" fontSize="2xl">
                             {paper.userId.username}
                           </Text>
@@ -164,20 +176,6 @@ export default function Dashboard() {
                           >
                             Discuss
                           </Button>
-                          <Button
-                            variant="solid"
-                            colorScheme="green"
-                            onClick={() => handleLike(paper._id)}
-                          >
-                            Like
-                          </Button>
-                          <Button
-                            variant="solid"
-                            colorScheme="red"
-                            onClick={() => handleDislike(paper._id)}
-                          >
-                            Dislike
-                          </Button>
                         </ButtonGroup>
                       </CardFooter>
                     </Card>
@@ -189,21 +187,25 @@ export default function Dashboard() {
               <Wrap spacing="15px" justify="center" mt="15px">
                 {userPapers.map((paper, index) => (
                   <WrapItem key={index}>
-                    <Card
-                      maxW="md"
-                      p="8px"
-                      border="1px"
-                      borderColor="gray.300"
-                    >
+                    <Card maxW="md" p="8px" border="1px" borderColor="gray.300">
                       <CardBody>
                         <Stack mt="6" spacing="3">
                           <Flex direction="row" justify="space-between">
                             <Heading size="md">{paper.paperTitle}</Heading>
 
                             <VStack>
-                              <ArrowUpIcon onClick={() => handleLike(paper._id)} boxSize={7}/>
-                              <div>8</div>
-                              <ArrowDownIcon onClick={() => handleDislike(paper._id)} boxSize={7}/>
+                              <ArrowUpIcon
+                                onClick={() => handleLike(paper._id)}
+                                boxSize={7}
+                              />
+                              <Text fontSize="lg">
+                                {paper.likes_users.length -
+                                  paper.dislikes_users.length}
+                              </Text>
+                              <ArrowDownIcon
+                                onClick={() => handleDislike(paper._id)}
+                                boxSize={7}
+                              />
                             </VStack>
                           </Flex>
                           <Text color="blue.600" fontSize="2xl">
