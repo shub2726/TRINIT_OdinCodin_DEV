@@ -202,6 +202,13 @@ router.put('/updateLikes/:paperId', async (req, res) => {
     // Add user to likes array
     await Paper.findByIdAndUpdate(paperId, { $inc: { likes: 1 } });
     paper.likes_users.push(userId);
+    const disliked = paper.dislikes_users.includes(userId);
+    if (disliked){
+        const indexToDelete = paper.dislikes_users.indexOf('c');
+
+        // Delete the element at the found index
+        paper.dislikes_users.splice(indexToDelete, 1);
+    }
     await paper.save();
     return res.status(200).json({ message: 'Like added' });
   } catch (error) {
@@ -229,6 +236,13 @@ router.put('/updateDislikes/:paperId', async (req, res) => {
     // Add user to dislikes array
     await Paper.findByIdAndUpdate(paperId, { $inc: { dislikes: 1 } });
     paper.dislikes_users.push(userId);
+    const liked = paper.likes_users.includes(userId);
+    if (liked){
+        const indexToDelete = paper.likes_users.indexOf('c');
+
+        // Delete the element at the found index
+        paper.likes_users.splice(indexToDelete, 1);
+    }
     await paper.save();
     return res.status(200).json({ message: 'Dislike added' });
   } catch (error) {
