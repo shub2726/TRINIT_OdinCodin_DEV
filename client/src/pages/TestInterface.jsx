@@ -110,6 +110,34 @@ export default function TestInterface() {
 
     const { testId } = useParams(); // Get paperId from the URL using useParams
 
+    const PaperSubmitHandler = () => {
+      const analyticsData = {
+        userId: token.user._id,
+        paperId: testId,
+        userAnswers: selectedAnswers,
+        timeWasted: [],
+        totalScore: 0,
+        scorePerQuestion: [],
+      };
+      
+      // Replace 'http://your-api-server/api/analytics/create' with the actual URL of your server endpoint
+      axios.post('http://localhost:8000/api/v1/analytics/submit-paper/', analyticsData)
+        .then(response => {
+          console.log('Success:', response.data);
+          navigate("/app/dashboard")
+        })
+        .catch(error => {
+          console.error('Error:', error);
+          toast({
+            title: "Some error has occurred",
+            position: 'bottom-right',
+            status: 'error',
+            duration: 1000,
+            isClosable: true,
+        })
+        });
+    }
+
     useEffect(() => {
         const fetchData = async () => {
             try {
@@ -375,8 +403,7 @@ export default function TestInterface() {
                     <Button size="md" borderRadius="0px" colorScheme='white' color="black" borderWidth="1px" borderColor="black" isDisabled={currentQuestion === questionPaper.questions.length-1} onClick={handleNext}>NEXT<ArrowRightIcon p="2px" /></Button>
 
                     <Spacer />
-                    <Button size="md" borderRadius="0px" colorScheme='green'>SUBMIT</Button>
-
+                    <Button size="md" borderRadius="0px" colorScheme='green' onClick={PaperSubmitHandler}>SUBMIT</Button>
                     </Flex>
                     </>
                 )}

@@ -11,7 +11,7 @@ const analyticsSchema = new mongoose.Schema({
     },
     userAnswers: [],
     timeWasted: [],
-    totalScore: 0,
+    totalScore: Number,
     scorePerQuestion: [],
 });
 

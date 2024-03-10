@@ -105,6 +105,8 @@ app.get('/auth/check-session', (req, res) => {
 
 const authRoute = require("./routes/auth")
 const userRoute = require("./routes/users")
+const analyticsRoute = require("./routes/analytics")
+
 app.use("/api/v1/auth", authRoute);
 app.use("/api/v1/users", userRoute)
 const paperRoute = require("./routes/papers")
@@ -114,6 +116,7 @@ const grpMsgRoute = require("./routes/groupMessage")
 app.use("/api/v1/papers", paperRoute);
 app.use("/api/v1/groups",grpRoute)
 app.use("/api/v1/groups/messages",grpMsgRoute)
+app.use("/api/v1/analytics", analyticsRoute);
 
 
 passportSetup();
