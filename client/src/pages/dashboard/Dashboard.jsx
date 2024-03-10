@@ -95,11 +95,11 @@ export default function Dashboard() {
               <Wrap spacing="15px" justify="center" mt="15px">
                 {allPapers.map((paper, index) => (
                   <WrapItem key={index}>
-                    <Card maxW="sm" p="20px" border="1px" borderColor="gray.300">
+                    <Card maxW="md" p="20px" border="1px" borderColor="gray.300">
                       <CardBody>
                         <Stack mt="6" spacing="3">
-                          <Heading size="md">{paper.paperTitle}</Heading>
-                          <Text color="blue.600" fontSize="2xl">
+                          <Heading size="2xl">{paper.paperTitle}</Heading>
+                          <Text color="blue.600" fontSize="md">
                             {paper.userId.username}
                           </Text>
                         </Stack>
