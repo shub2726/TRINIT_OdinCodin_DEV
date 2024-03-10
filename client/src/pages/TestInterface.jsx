@@ -71,6 +71,7 @@ export default function TestInterface() {
     const [selectedAnswers, setSelectedAnswers] = useState([]);
     const [questionButton, setQuestionButton] = useState([]);
     const [currentQuestion,setCurrentQuestion] = useState(1);
+    const [selectedRadioButton, setSelectedRadioButton] = useState([]);
 
 
     useEffect(() => {
@@ -168,6 +169,9 @@ export default function TestInterface() {
           const nextQuestion = currentQuestion + 1;
           questionButton[currentQuestion] = 1;
           handleQuestionButtonClick(nextQuestion);
+          let answers = [false, false, false, false]
+          answers[parseInt(selectedAnswers[currentQuestion])] = true;
+          setSelectedRadioButton(selectedRadioButton => [...selectedRadioButton, answers])
         } else {
             toast({
                 title: "Please Select an Answer",
@@ -201,6 +205,8 @@ export default function TestInterface() {
 
       const handleClearResponse = () => {
         const updatedAnswers = selectedAnswers.map((c, i) => (i === currentQuestion ? 0 : c));
+        let answers = [false, false, false, false]
+          setSelectedRadioButton(selectedRadioButton => [...selectedRadioButton, answers])
         setSelectedAnswers(updatedAnswers);
       };
 
@@ -345,7 +351,7 @@ export default function TestInterface() {
                     }}
                     >
                         <Text fontSize='xl' p='25px' fontWeight='500'>{questionPaper.questions[parseInt(value)].question}</Text>
-                        <RadioGroup p="15px" onChange={handleOptionChange} value={selectedAnswers[parseInt(value)]}>
+                        <RadioGroup p="15px" onChange={handleOptionChange} value={parseInt(selectedAnswers[parseInt(value)])}>
                         <Stack direction='column'>
                             {questionPaper.questions[parseInt(value)].options.map((option, index) => (
                                 <Radio key={index} size="lg" value={index + 1}>
