@@ -2,7 +2,9 @@ import { chakra, Box, Wrap, WrapItem } from "@chakra-ui/react";
 import {
   Card,
   CardBody,
+  Flex,
   Stack,
+  VStack,
   Heading,
   Text,
   Divider,
@@ -12,15 +14,27 @@ import {
 } from "@chakra-ui/react";
 import Navbar from "../../components/Navbar";
 import Cookies from "universal-cookie";
-import { Tabs, TabList, TabPanels, Tab, TabPanel,useToast } from '@chakra-ui/react'
+import {
+  Tabs,
+  TabList,
+  TabPanels,
+  Tab,
+  TabPanel,
+  useToast,
+} from "@chakra-ui/react";
 import axios from "axios";
 import { useEffect, useState } from "react";
 import { Link, useNavigate } from "react-router-dom";
 
+import { 
+  ArrowUpIcon,
+  ArrowDownIcon
+ } from "@chakra-ui/icons";
+
 export default function Dashboard() {
   const cookies = new Cookies();
-  const [userPapers, setUserPapers] = useState([])
-  const [allPapers, setAllPapers] = useState([])
+  const [userPapers, setUserPapers] = useState([]);
+  const [allPapers, setAllPapers] = useState([]);
   const token = cookies.get("TOKEN");
   const toast = useToast();
 
@@ -28,69 +42,99 @@ export default function Dashboard() {
 
   const fetchUserPapers = async () => {
     try {
-        const response = await axios.get('http://localhost:8000/api/v1/papers/getPapers/' + token.user._id);
-        setUserPapers(response.data);
+      const response = await axios.get(
+        "http://localhost:8000/api/v1/papers/getPapers/" + token.user._id
+      );
+      setUserPapers(response.data);
     } catch (error) {
-        console.error('Error:', error);
+      console.error("Error:", error);
     }
-  }
+  };
 
   const fetchPapers = async () => {
     try {
-        const response = await axios.get('http://localhost:8000/api/v1/papers/getAllPapers/');
-        setAllPapers(response.data);
+      const response = await axios.get(
+        "http://localhost:8000/api/v1/papers/getAllPapers/"
+      );
+      setAllPapers(response.data);
     } catch (error) {
-        console.error('Error:', error);
+      console.error("Error:", error);
     }
-  }
+  };
 
   const checkifMember = async (grpID) => {
-    try{
-      // console.log(grpID);
+    try {
       if (grpID == undefined) return false;
-      const value = await axios.post('http://localhost:8000/api/v1/groups/check-members',{"GroupID":grpID,"userID":token.user._id});
-      if (value.data){
-        navigate(`/app/tests/${grpID}`)
-      }
-      else{
+      const value = await axios.post(
+        "http://localhost:8000/api/v1/groups/check-members",
+        { GroupID: grpID, userID: token.user._id }
+      );
+      if (value.data) {
+        navigate(`/app/groups/${grpID}`);
+      } else {
         toast({
           title: "Paper not attempted. Cannot discuss",
-          position: 'top-left',
-          status: 'error',
+          position: "top-left",
+          status: "error",
           duration: 1000,
           isClosable: true,
-      })
+        });
       }
     } catch (error) {
-        console.error('Error:', error);
-        return false;
+      console.error("Error:", error);
+      return false;
     }
-  }
+  };
 
-  const redir1 = (grpID) =>{
+  const handleLike = async (paperId) => {
+    try {
+      console.log("hi")
+      await axios.put(
+        `http://localhost:8000/api/v1/papers/updateLikes/${paperId}?userId=${token.user._id}`
+      );
+      fetchPapers();
+      console.log("done")
+    } catch (error) {
+      console.error("Error:", error);
+    }
+  };
+  
 
-  }
-
+  const handleDislike = async (paperId) => {
+    try {
+      await axios.put(
+        `http://localhost:8000/api/v1/papers/updateDislikes/${paperId}?userId=${token.user._id}`
+      );
+      fetchPapers();
+    } catch (error) {
+      console.error("Error:", error);
+    }
+  };
 
   useEffect(() => {
     fetchPapers();
     fetchUserPapers();
-  }, [])
+  }, []);
 
   return (
     <>
-    <Box p="4" flex={1}>
-      <Tabs>
-        <TabList>
-          <Tab>All available Tests</Tab>
-          <Tab>Your Tests</Tab>
-        </TabList>
+      <Box p="4" flex={1}>
+        <Tabs>
+          <TabList>
+            <Tab>All available Tests</Tab>
+            <Tab>Your Tests</Tab>
+          </TabList>
           <TabPanels>
             <TabPanel>
               <Wrap spacing="15px" justify="center" mt="15px">
                 {allPapers.map((paper, index) => (
                   <WrapItem key={index}>
-                    <Card maxW="md" p="8px" border="1px" borderColor="gray.300">
+                    <Card
+                      maxW="md"
+                      p="8px"
+                      border="1px"
+                      borderColor="gray.300"
+                    >
                       <CardBody>
                         <Stack mt="6" spacing="3">
                           <Heading size="md">{paper.paperTitle}</Heading>
@@ -105,13 +149,35 @@ export default function Dashboard() {
                           <Button variant="solid" colorScheme="green">
                             Attempt Now
                           </Button>
-                          <Button variant="solid" colorScheme="gray" color="gray">
+                          <Button
+                            variant="solid"
+                            colorScheme="gray"
+                            color="gray"
+                          >
                             Analytics
                           </Button>
-                            <Button variant="solid" colorScheme="gray" color="gray" onClick={() => checkifMember(paper.GroupID)}>
-                              Discuss
-                            </Button>
-                          
+                          <Button
+                            variant="solid"
+                            colorScheme="gray"
+                            color="gray"
+                            onClick={() => checkifMember(paper.GroupID)}
+                          >
+                            Discuss
+                          </Button>
+                          <Button
+                            variant="solid"
+                            colorScheme="green"
+                            onClick={() => handleLike(paper._id)}
+                          >
+                            Like
+                          </Button>
+                          <Button
+                            variant="solid"
+                            colorScheme="red"
+                            onClick={() => handleDislike(paper._id)}
+                          >
+                            Dislike
+                          </Button>
                         </ButtonGroup>
                       </CardFooter>
                     </Card>
@@ -123,10 +189,23 @@ export default function Dashboard() {
               <Wrap spacing="15px" justify="center" mt="15px">
                 {userPapers.map((paper, index) => (
                   <WrapItem key={index}>
-                    <Card maxW="md" p="8px" border="1px" borderColor="gray.300">
+                    <Card
+                      maxW="md"
+                      p="8px"
+                      border="1px"
+                      borderColor="gray.300"
+                    >
                       <CardBody>
                         <Stack mt="6" spacing="3">
-                          <Heading size="md">{paper.paperTitle}</Heading>
+                          <Flex direction="row" justify="space-between">
+                            <Heading size="md">{paper.paperTitle}</Heading>
+
+                            <VStack>
+                              <ArrowUpIcon onClick={() => handleLike(paper._id)} boxSize={7}/>
+                              <div>8</div>
+                              <ArrowDownIcon onClick={() => handleDislike(paper._id)} boxSize={7}/>
+                            </VStack>
+                          </Flex>
                           <Text color="blue.600" fontSize="2xl">
                             You
                           </Text>
@@ -138,10 +217,19 @@ export default function Dashboard() {
                           <Button variant="solid" colorScheme="green">
                             Attempt Now
                           </Button>
-                          <Button variant="solid" colorScheme="gray" color="gray">
+                          <Button
+                            variant="solid"
+                            colorScheme="gray"
+                            color="gray"
+                          >
                             Analytics
                           </Button>
-                          <Button variant="solid" colorScheme="gray" color="gray" onClick={() => checkifMember(paper.GroupID)}>
+                          <Button
+                            variant="solid"
+                            colorScheme="gray"
+                            color="gray"
+                            onClick={() => checkifMember(paper.GroupID)}
+                          >
                             Discuss
                           </Button>
                         </ButtonGroup>
