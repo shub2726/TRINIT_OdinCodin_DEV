@@ -25,16 +25,8 @@ const paperSchema = new mongoose.Schema({
         default: true
     },
     attemptedBy:  [{ type: mongoose.Schema.Types.ObjectId, ref: 'User' }],
-    upvotes: { 
-        type: Number, 
-        default: 0 
-    },
-    downvotes: { 
-        type: Number, 
-        default: 0 
-    },
-    upvote_users:  [{ type: mongoose.Schema.Types.ObjectId, ref: 'User' }],
-    downvote_users:  [{ type: mongoose.Schema.Types.ObjectId, ref: 'User' }]
+    likes_users:  [{ type: mongoose.Schema.Types.ObjectId, ref: 'User' }],
+    dislikes_users:  [{ type: mongoose.Schema.Types.ObjectId, ref: 'User' }]
 });
 
 module.exports = mongoose.model("Paper", paperSchema);

@@ -207,5 +207,76 @@ router.put("/updateOptionImages/:paperId", async (req, res) => {
     }
 });
 
+router.put('/updateLikes/:paperId', async (req, res) => {
+  try {
+    const { userId } = req.query;
+    const { paperId } = req.params;
+
+    const paper = await Paper.findById(paperId);
+    const liked = paper.likes_users.includes(userId);
+
+    if (liked) {
+      const indexOfLike = paper.likes_users.indexOf(userId);
+      paper.likes_users.splice(indexOfLike, 1);
+      await paper.save();
+      await Paper.findByIdAndUpdate(paperId, { $inc: { likes: -1 } });
+      return res.status(200).json({ message: 'Like removed' });
+    }
+
+    // Add user to likes array
+    await Paper.findByIdAndUpdate(paperId, { $inc: { likes: 1 } });
+    paper.likes_users.push(userId);
+    const disliked = paper.dislikes_users.includes(userId);
+    if (disliked){
+        const indexToDelete = paper.dislikes_users.indexOf('c');
+
+        // Delete the element at the found index
+        paper.dislikes_users.splice(indexToDelete, 1);
+    }
+    await paper.save();
+    return res.status(200).json({ message: 'Like added' });
+  } catch (error) {
+    console.log(error.message);
+    res.status(500).json({ message: error.message });
+  }
+});
+
+router.put('/updateDislikes/:paperId', async (req, res) => {
+  try {
+    const { userId } = req.query;
+    const { paperId } = req.params;
+
+    const paper = await Paper.findById(paperId);
+    const disliked = paper.dislikes_users.includes(userId);
+
+    if (disliked) {
+      const indexOfDislike = paper.dislikes_users.indexOf(userId);
+      paper.dislikes_users.splice(indexOfDislike, 1);
+      await paper.save();
+      await Paper.findByIdAndUpdate(paperId, { $inc: { dislikes: -1 } });
+      return res.status(200).json({ message: 'Dislike removed' });
+    }
+
+    // Add user to dislikes array
+    await Paper.findByIdAndUpdate(paperId, { $inc: { dislikes: 1 } });
+    paper.dislikes_users.push(userId);
+    const liked = paper.likes_users.includes(userId);
+    if (liked){
+        const indexToDelete = paper.likes_users.indexOf('c');
+
+        // Delete the element at the found index
+        paper.likes_users.splice(indexToDelete, 1);
+    }
+    await paper.save();
+    return res.status(200).json({ message: 'Dislike added' });
+  } catch (error) {
+    console.log(error.message);
+    res.status(500).json({ message: error.message });
+  }
+});
+
+module.exports = router;
+
+
 
 module.exports = router;

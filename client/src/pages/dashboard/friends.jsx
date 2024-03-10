@@ -13,6 +13,8 @@ import {
   InputGroup,
   InputLeftElement,
   Box,
+  SkeletonCircle,
+  SkeletonText,
   Text,
   Stack,
   Button,
@@ -26,9 +28,7 @@ import {
 } from "@chakra-ui/react";
 
 import { BiSolidHourglass } from "react-icons/bi";
-
 import { IoMdCheckmark } from "react-icons/io";
-
 import { AddIcon, SpinnerIcon, CheckIcon, CloseIcon } from "@chakra-ui/icons";
 
 export default function Friends() {
@@ -39,6 +39,7 @@ export default function Friends() {
   const [users, setUsers] = useState([]);
   const [friends, setFriends] = useState([]);
   const [searchInput, setSearchInput] = useState("");
+  const [loading, setLoading] = useState(true); // State to manage loading
 
   const fetchUsers = async () => {
     try {
@@ -56,8 +57,10 @@ export default function Friends() {
       });
 
       setUsers(sortedUsers);
+      setLoading(false); // Set loading to false after fetching data
     } catch (error) {
       console.error("Error fetching users:", error);
+      setLoading(false); // Set loading to false in case of error
     }
   };
 
@@ -170,20 +173,33 @@ export default function Friends() {
       gap={10}
     >
       <Flex direction="row" flex={1} gap={10} flexWrap="wrap">
-        {friends.map((index) => (
-          <WrapItem key={index}>
-            <Card maxW="sm" p="20px" border="1px" borderColor="gray.300">
-              <CardBody>
-                <Stack spacing={10} alignItems="center">
-                  <Avatar src="https://bit.ly/broken-link" />
-                  <Text>{index.firstName}</Text>
-                </Stack>
-              </CardBody>
-            </Card>
-          </WrapItem>
-        ))}
+        {/* Display skeletons if loading is true */}
+        {loading ? (
+          <>
+            <SkeletonFriendCard />
+            <SkeletonFriendCard />
+            <SkeletonFriendCard />
+            <SkeletonFriendCard />
+            <SkeletonFriendCard />
+            <SkeletonFriendCard />
+            <SkeletonFriendCard />
+            <SkeletonFriendCard />
+          </>
+        ) : (
+          friends.map((index) => (
+            <WrapItem key={index}>
+              <Card height="300px" width="200px" maxW="sm" p="20px" border="1px" borderColor="gray.300">
+                <CardBody>
+                  <Stack spacing={10} alignItems="center">
+                    <Avatar src="https://bit.ly/broken-link" />
+                    <Text fontSize="xl">{index.firstName}</Text>
+                  </Stack>
+                </CardBody>
+              </Card>
+            </WrapItem>
+          ))
+        )}
       </Flex>
-      {/* <Divider alignSelf="stretch" orientation="vertical" /> */}
       <Flex
         justifySelf="flex-end"
         direction="column"
@@ -277,3 +293,11 @@ export default function Friends() {
     </Flex>
   );
 }
+
+// Skeleton for friend card
+const SkeletonFriendCard = () => (
+  <Box width="200px" height="300px" padding="6" boxShadow="lg" bg="white">
+    <SkeletonCircle size="10" />
+    <SkeletonText mt="4" noOfLines={4} spacing="4" skeletonHeight="2" />
+  </Box>
+);
