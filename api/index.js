@@ -10,7 +10,6 @@ const router = express.Router();
 const passportSetup = require("./passport-setup");
 
 const app = express();
-app.use(cors());
 dotenv.config();
 
 app.use(session({
