@@ -26,7 +26,7 @@ app.use(bodyParser.json());
 
 app.use(
     cors({
-        origin:"http://localhost:3000",
+        origin:"https://odincodin.netlify.app",
         methods:"GET,POST,PUT,DELETE,PATCH",
         credentials: true
     }
@@ -48,7 +48,7 @@ app.get("/", (req, res) => {
 
 app.get("/login/success", (req, res) => {
 	if (req.user) {
-        res.redirect("http://localhost:3000/")
+        res.redirect("https://odincodin.netlify.app/")
 	} else {
 		res.status(403).json({ error: true, message: "Not Authorized" });
 	}
@@ -88,7 +88,7 @@ app.get('/user', (req, res) => {
 
 app.get('/logout', (req, res) => {
     req.logout(() => {
-        res.redirect("http://localhost:3000/")
+        res.redirect("https://odincodin.netlify.app/")
     });
 });
 
